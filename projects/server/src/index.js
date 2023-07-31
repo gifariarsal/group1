@@ -2,6 +2,10 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+const path = require("path");
+
+const db = require("../models");
+// db.sequelize.sync({ alter: true });
 
 const db = require("../models");
 // db.sequelize.sync({ alter: true });
@@ -12,17 +16,22 @@ app.use(
   cors({
     origin: [
       process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
+      process.env.WHITELISTED_DOMAIN.split(","),
     ],
   })
 );
 
 app.use(express.json());
 
+
 //#region API ROUTES
 
+const { authRouter, profileRouter, productRouter } = require("./router");
 // ===========================
 // NOTE : Add your routes here
+
+app.use("/api", authRouter, profileRouter, productRouter)
+app.use("/", express.static(path.resolve(__dirname,"../")))
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -33,6 +42,8 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+
+app.get
 
 // ===========================
 
