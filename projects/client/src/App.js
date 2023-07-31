@@ -2,6 +2,8 @@ import axios from "axios";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Landing from "./pages/Landing";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -16,6 +18,8 @@ function App() {
   }, []);
   return (
     <>
+    <Login />
+    {/* <Landing /> */}
     <Routes>
       <Route></Route>
     </Routes>

@@ -16,6 +16,7 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
+import MainButton from "./buttons/MainButton";
 
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const validationSchema = Yup.object().shape({
@@ -52,7 +53,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
   });
 
   return (
-    <Modal>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -70,11 +71,10 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
 
             <FormControl
               isRequired
-              isInvalid={formik.touched.email && formik.errors.email}
+              isInvalid={formik.errors.email}
             >
               <Input
                 id="email"
-                name="email"
                 type="email"
                 rounded={"lg"}
                 onChange={formik.handleChange}
@@ -91,19 +91,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              type="submit"
-              display={"flex"}
-              justifyContent={"center"}
-              w={"100%"}
-              rounded={"lg"}
-              color={"white"}
-              bgColor={"#9D4EDD"}
-              _hover={{ bgColor: "#B75CFF" }}
-              _active={{ bgColor: "#6C12B5" }}
-            >
-              Send Request
-            </Button>
+            <MainButton content="Send Request" />
           </ModalFooter>
         </form>
       </ModalContent>
