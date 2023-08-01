@@ -1,9 +1,8 @@
-import axios from "axios";
 import "./App.css";
-import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
-import Landing from "./pages/Landing";
+import AdminLanding from "./pages/admin/AdminLanding";
+import CashierLanding from "./pages/cashier/CashierLanding";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -22,7 +21,8 @@ function App() {
     {/* <Landing /> */}
     <Routes>
       <Route path="/" element={<Login />} ></Route>
-      <Route path="/landing" element={<Landing />} ></Route>
+      <Route path="/admin/landing" element={<AdminLanding />} ></Route>
+      <Route path="/cashier/landing" element={<CashierLanding />} ></Route>
     </Routes>
     </>
   );

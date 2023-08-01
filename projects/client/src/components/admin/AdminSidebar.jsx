@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Icon, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import {
   IoPersonOutline,
   IoBagHandleOutline,
@@ -7,7 +7,7 @@ import {
 } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
-const Sidebar = () => {
+const AdminSidebar = () => {
   return (
     <Box as={"aside"} w={"64"} bg={"#2C3E50"} color="white" minH="100vh">
       <VStack spacing="2" align="stretch">
@@ -22,8 +22,9 @@ const Sidebar = () => {
           <Box
             display={"flex"}
             alignItems={"center"}
-            justifyContent={"center"}
+            justifyContent={"flex-start"}
             p={"4"}
+            bg={"#2C3E50"}
             _hover={{ bg: "#4E586E" }}
           >
             <IoBagHandleOutline size={24} />
@@ -32,15 +33,29 @@ const Sidebar = () => {
             </Text>
           </Box>
         </Link>
-        <Box>
-          <Link to={"/about"}>
-            <Text fontSize="lg" fontWeight="bold" p="2">
+        <Link to={"/about"}>
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"flex-start"}
+            p={"4"}
+            _hover={{ bg: "#4E586E" }}
+          >
+            <IoPersonOutline size={24} />
+            <Text fontSize="lg" fontWeight="bold" ml={2}>
               Cashier Management
             </Text>
-          </Link>
-        </Box>
-        <Box>
-          <Text fontSize="lg" fontWeight="bold" p="2">
+          </Box>
+        </Link>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"flex-start"}
+          p={"4"}
+          _hover={{ bg: "#4E586E" }}
+        >
+          <IoCartOutline size={24} />
+          <Text fontSize="lg" fontWeight="bold" ml={2}>
             Sales Report
           </Text>
         </Box>
@@ -49,4 +64,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;
