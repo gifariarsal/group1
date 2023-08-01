@@ -7,6 +7,9 @@ const path = require("path");
 const db = require("../models");
 // db.sequelize.sync({ alter: true });
 
+const db = require("../models");
+// db.sequelize.sync({ alter: true });
+
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(

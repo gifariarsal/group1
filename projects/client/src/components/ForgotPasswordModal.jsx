@@ -71,10 +71,11 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
 
             <FormControl
               isRequired
-              isInvalid={formik.errors.email}
+              isInvalid={formik.touched.email && formik.errors.email}
             >
               <Input
                 id="email"
+                name="email"
                 type="email"
                 rounded={"lg"}
                 onChange={formik.handleChange}
