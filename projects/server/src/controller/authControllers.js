@@ -59,25 +59,29 @@ const authControllers = {
       }
 
       const checkLogin = await users.findOne({ where });
-      if (!checkLogin.isActive)
-        return res.status(404).json({ message: "Your Account is not Active" });
-      // console.log("check log:",checkLogin)
+      if (!checkLogin) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      // if (!checkLogin.isActive)
+      //   return res.status(404).json({ message: "Your Account is not Active" });
+      // // console.log("check log:",checkLogin)
 
       const passwordValid = await bcrypt.compare(password, checkLogin.password);
-      // console.log("pass:",passwordValid)
+      console.log("pass:",passwordValid)
       if (!passwordValid)
         return res.status(404).json({ message: "Incorrect password" });
 
       let payload = {
         id: checkLogin.id,
         username: checkLogin.username,
+        role: checkLogin.role
       };
 
       const token = jwt.sign(payload, process.env.JWT_KEY, {
-        expiresIn: "100h",
+        expiresIn: "24h",
       });
 
-      return res.status(200).json({ message: "Login success", data: token });
+      return res.status(200).json({ message: "Login success", token: token });
     } catch (error) {
       return res
         .status(500)
@@ -151,16 +155,38 @@ const authControllers = {
           html: tempResult,
         });
       });
-      return res
-        .status(200)
-        .json({ message: "Your password has been reset successfully" });
+      return res.status(200).json({ message: "Your password has been reset successfully" });
     } catch (error) {
-      return res
-        .status(500)
-        .json({
-          message: "Failed to reset your password",
-          error: error.message,
-        });
+      return res.status(500).json({ message: "Failed to reset your password", error: error.message });
+    }
+  },
+
+  cashierActive: async (req, res) => {
+    try {
+      await db.sequelize.transaction(async (t) => {
+        const updateCashier = await users.update(
+          { isActive: true },
+          { transaction: t }
+        );
+
+        res.status(200).json({ message: "Cashier active!" });
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error updating cashier status", error: error.message })
+    }
+  },
+
+  cashierInActive: async (req, res) => {
+    try {
+      await db.sequelize.transaction(async (t) => {
+        const updateCashier = await users.update(
+          { isActive: false },
+          { transaction: t }
+        );
+        res.status(200).json({ message: "Cashier inactive!" });
+      })
+    } catch (error) {
+      res.status(500).json({ message: "Error updating cashier status", error: error.message })
     }
   },
 };

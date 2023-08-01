@@ -27,7 +27,7 @@ const Login = () => {
   const login = async (values) => {
     try {
       const res = await axios.post(
-        "https://minpro-blog.purwadhikabootcamp.com/api/auth/login",
+        "http://localhost:8000/api/auth/login",
         {
           username: values.username,
           password: values.password,
@@ -36,7 +36,7 @@ const Login = () => {
       console.log(res);
       if (res.status === 200) {
         dispatch(loginSuccess(res.data.token));
-        navigate("/");
+        navigate("/landing");
       }
     } catch (err) {
       console.log(err);
