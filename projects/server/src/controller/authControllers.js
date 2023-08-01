@@ -81,7 +81,7 @@ const authControllers = {
         expiresIn: "24h",
       });
 
-      return res.status(200).json({ message: "Login success", token: token });
+      return res.status(200).json({ message: "Login success", token: token, role: checkLogin.role });
     } catch (error) {
       return res
         .status(500)

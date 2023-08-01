@@ -1,4 +1,17 @@
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputRightElement, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+  VStack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import React from "react";
@@ -26,17 +39,18 @@ const Login = () => {
 
   const login = async (values) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/auth/login",
-        {
-          username: values.username,
-          password: values.password,
-        }
-      );
+      const res = await axios.post("http://localhost:8000/api/auth/login", {
+        username: values.username,
+        password: values.password,
+      });
       console.log(res);
       if (res.status === 200) {
         dispatch(loginSuccess(res.data.token));
-        navigate("/landing");
+        if (res.data.role === "Cashier") {
+          navigate("/cashier/landing");
+        } else if (res.data.role === "Admin") {
+          navigate("/admin/landing");
+        }
       }
     } catch (err) {
       console.log(err);
@@ -66,7 +80,12 @@ const Login = () => {
       alignItems={"center"}
       h={"100vh"}
     >
-      <Box boxShadow={"lg"} rounded={"2xl"} h={"400px"} w={{ base: "80vw", md: "60vw", lg: "40vw"}}>
+      <Box
+        boxShadow={"lg"}
+        rounded={"2xl"}
+        h={"400px"}
+        w={{ base: "80vw", md: "60vw", lg: "40vw" }}
+      >
         <VStack spacing={"4"} px={8} py={12}>
           <Box w={"full"}>
             <Text
