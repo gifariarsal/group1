@@ -6,22 +6,23 @@ import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 
 function App() {
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const { data } = await axios.get(
+  //       `${process.env.REACT_APP_API_BASE_URL}/greetings`
+  //     );
+  //     setMessage(data?.message || "");
+  //   })();
+  // }, []);
   return (
     <>
-    <Login />
+    {/* <Login /> */}
     {/* <Landing /> */}
     <Routes>
-      <Route></Route>
+      <Route path="/" element={<Login />} ></Route>
+      <Route path="/landing" element={<Landing />} ></Route>
     </Routes>
     </>
   );

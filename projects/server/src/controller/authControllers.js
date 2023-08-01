@@ -63,20 +63,21 @@ const authControllers = {
       // console.log("check log:",checkLogin)
 
       const passwordValid = await bcrypt.compare(password, checkLogin.password);
-      // console.log("pass:",passwordValid)
+      console.log("pass:",passwordValid)
       if (!passwordValid)
         return res.status(404).json({ message: "Incorrect password" });
 
       let payload = {
         id: checkLogin.id,
         username: checkLogin.username,
+        role: checkLogin.role
       };
 
       const token = jwt.sign(payload, process.env.JWT_KEY, {
-        expiresIn: "100h",
+        expiresIn: "24h",
       });
 
-      return res.status(200).json({ message: "Login success", data: token });
+      return res.status(200).json({ message: "Login success", token: token });
     } catch (error) {
       return res
         .status(500)
@@ -148,14 +149,9 @@ const authControllers = {
           html: tempResult,
         });
       });
-      return res
-        .status(200)
-        .json({ message: "Your password has been reset successfully" });
+      return res.status(200).json({ message: "Your password has been reset successfully" });
     } catch (error) {
-      return res.status(500).json({
-        message: "Failed to reset your password",
-        error: error.message,
-      });
+      return res.status(500).json({ message: "Failed to reset your password", error: error.message });
     }
   },
 

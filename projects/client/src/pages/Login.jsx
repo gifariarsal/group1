@@ -36,7 +36,7 @@ const Login = () => {
       console.log(res);
       if (res.status === 200) {
         dispatch(loginSuccess(res.data.token));
-        navigate("/");
+        navigate("/landing");
       }
     } catch (err) {
       console.log(err);
