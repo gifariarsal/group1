@@ -5,7 +5,9 @@ const initialState = {
     id: null,
     username: "",
     email: "",
-    password: "",
+    role: "",
+    isActive: "",
+    imgProfile: ""
   },
   login: false,
 };
@@ -14,6 +16,10 @@ export const AuthReducer = createSlice({
   name: "AuthReducer",
   initialState,
   reducers: {
+    setUser: (state, action) => {
+      const { id, username, email, role, isActive, imgProfile } = action.payload;
+      state.user = { id, username, email, role, isActive, imgProfile };
+    },
     loginSuccess: (state, action) => {
       state.login = true;
       localStorage.setItem("token", action.payload);
