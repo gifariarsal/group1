@@ -25,15 +25,13 @@ const Navbar = () => {
           borderColor={"#F9CDA6"}
           align={"center"}
         >
-          <Box w={"50%"} m={"16px 60px"}>
+          <Box w={"50%"} my={"16px"} mx={{ base: "24px", lg:"60px" }}>
             <Flex justifyContent={"flex-start"} align={"center"}>
-              <Link to={"/landing"}>
                 <Image
                   src={Logo}
                   h={"32px"}
                   _hover={{ filter: "brightness(150%)", transition: "300ms" }}
-                ></Image>
-              </Link>
+                />
             </Flex>
           </Box>
           <Box w={"50%"} m={"16px 60px"}>
