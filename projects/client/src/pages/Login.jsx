@@ -27,7 +27,7 @@ const Login = () => {
   const login = async (values) => {
     try {
       const res = await axios.post(
-        "https://minpro-blog.purwadhikabootcamp.com/api/auth/login",
+        "http://localhost:8000/api/auth/login",
         {
           username: values.username,
           password: values.password,

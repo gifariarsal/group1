@@ -7,5 +7,7 @@ router.post("/auth/register", validateRegister, validate, authControllers.regist
 router.put("/auth/forgot-password",  validate, validateForgotPassword, authControllers.forgotPassword);
 router.patch("/auth/reset-password", verifyToken, validateResetPassword, validate, authControllers.resetPassword);
 router.post("/auth/login",  authControllers.login);
+router.patch("/auth/active", authControllers.cashierActive);
+router.patch("/auth/inactive", authControllers.cashierInActive);
 
 module.exports = router;

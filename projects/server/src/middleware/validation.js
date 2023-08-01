@@ -79,6 +79,17 @@ const validateChangeEmail = [
     .withMessage("Invalid email format"),
 ];
 
+const validateChangePassword = [
+  body("oldPassword").notEmpty().withMessage("Password is required"),
+  body("newPassword")
+    .notEmpty()
+    .withMessage("Password is required")
+    .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,}$/)
+    .withMessage(
+      "Password must be at least 6 characters, 1 symbol, and 1 uppercase"
+    )
+];
+
 const validate = (req, res, next) => {
   const { errors } = validationResult(req);
 
@@ -94,5 +105,6 @@ module.exports = {
   validateResetPassword,
   validateChangeUsername,
   validateChangeEmail,
+  validateChangePassword,
   validate,
 };

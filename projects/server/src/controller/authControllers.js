@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const bcrypt = require("bcrypt");
 const db = require("../../models");
 const jwt = require("jsonwebtoken");
@@ -37,8 +37,7 @@ const authControllers = {
         );
 
         return res.status(200).json({
-          message:
-            "Register success with username: " + result.username,
+          message: "Register success with username: " + result.username,
           data: result,
         });
       });
@@ -112,11 +111,9 @@ const authControllers = {
         subject: "Forgot Password",
         html: tempResult,
       });
-      return res
-        .status(200)
-        .json({
-          message: "Request accepted. Check your email to reset your password",
-        });
+      return res.status(200).json({
+        message: "Request accepted. Check your email to reset your password",
+      });
     } catch (error) {
       return res.status(500).json({ message: "Failed to send request" });
     }
@@ -155,12 +152,80 @@ const authControllers = {
         .status(200)
         .json({ message: "Your password has been reset successfully" });
     } catch (error) {
-      return res
-        .status(500)
-        .json({
-          message: "Failed to reset your password",
-          error: error.message,
-        });
+      return res.status(500).json({
+        message: "Failed to reset your password",
+        error: error.message,
+      });
+    }
+  },
+
+  cashierActive: async (req, res) => {
+    try {
+      const { username } = req.query;
+
+      await db.sequelize.transaction(async (t) => {
+        const updateCashier = await users.update(
+          { isActive: true },
+          {
+            where: {
+              username: username,
+            },
+            transaction: t,
+          }
+        );
+
+        const user = await users.findOne({ where: { username } });
+        if (!user) {
+          return res.status(404).json({ message: "Cashier not found" });
+        }
+
+        if (user.dataValues.isActive == true) {
+          // If the cashier is already active, return a message accordingly
+          return res.status(200).json({ message: "Cashier is already active" });
+        }
+        res.status(200).json({ message: "Cashier active!" });
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error updating cashier status",
+        error: error.message,
+      });
+    }
+  },
+
+  cashierInActive: async (req, res) => {
+    try {
+      const { username } = req.query;
+
+      await db.sequelize.transaction(async (t) => {
+        const updateCashier = await users.update(
+          { isActive: false },
+          {
+            where: {
+              username: username,
+            },
+            transaction: t,
+          }
+        );
+
+        const user = await users.findOne({ where: { username } });
+        if (!user) {
+          return res.status(404).json({ message: "Cashier not found" });
+        }
+
+        if (user.dataValues.isActive == false) {
+          // If the cashier is already active, return a message accordingly
+          return res
+            .status(200)
+            .json({ message: "Cashier is already inactive" });
+        }
+        res.status(200).json({ message: "Cashier inactive!" });
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error updating cashier status",
+        error: error.message,
+      });
     }
   },
 };

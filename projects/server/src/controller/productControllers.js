@@ -37,6 +37,7 @@ const productControllers = {
         harga_produk,
         quantity,
         description,
+        isActive,
       } = req.body;
       await db.sequelize.transaction(async (t) => {
         const result = await product.create(
@@ -48,6 +49,7 @@ const productControllers = {
             harga_produk,
             quantity,
             description,
+            isActive
           },
           { transaction: t }
         );
@@ -104,6 +106,108 @@ const productControllers = {
         .json({ message: "Failed to get product", error: error.message });
     }
   },
+
+  updateProduct: async (req, res) => {
+    try {
+      const { id } = req.query; // Assuming you get the productId from the request URL or query parameters
+      const updatedFields = {};
+  
+      if (req.body.name) {
+        updatedFields.name = req.body.name;
+      }
+  
+      if (req.body.categoryId) {
+        updatedFields.categoryId = req.body.categoryId;
+      }
+  
+      if (req.file && req.file.path) {
+        updatedFields.productImg = req.file.path;
+      }
+  
+      if (req.body.modal_produk) {
+        updatedFields.modal_produk = req.body.modal_produk;
+      }
+  
+      if (req.body.harga_produk) {
+        updatedFields.harga_produk = req.body.harga_produk;
+      }
+  
+      if (req.body.quantity) {
+        updatedFields.quantity = req.body.quantity;
+      }
+  
+      if (req.body.description) {
+        updatedFields.description = req.body.description;
+      }
+  
+      const existingProduct = await product.findOne({
+        where: {
+          name: updatedFields.name,
+        },
+      })
+  
+      if (existingProduct && existingProduct.id !== id) {
+        return res
+          .status(409)
+          .json({ message: "Product name already exists. Choose a different name." });
+      }
+
+      await db.sequelize.transaction(async (t) => {
+        const updatedProduct = await product.update(updatedFields, {
+          where: {
+            id: id,
+          },
+          transaction: t,
+        });
+  
+        if (updatedProduct[0] === 0) {
+          // If updatedProduct[0] is 0, it means no rows were affected by the update
+          return res.status(404).json({ message: "Product not found" });
+        }
+  
+        res.status(200).json({ message: "Product updated successfully" });
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update product", error: error.message });
+    }
+  },
+  
+  deactivateProduct: async (req, res) => {
+    const productId = req.query.id;
+  
+    try {
+      const productToUpdate = await product.findByPk(productId);
+      if (!productToUpdate) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      productToUpdate.isActive = false;
+      await productToUpdate.save();
+  
+      res.status(200).json({ message: "Product deactivated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to deactivate product", error: error.message });
+    }
+  },
+  
+  activateProduct: async (req, res) => {
+    const productId = req.query.id;
+  
+    try {
+      const productToUpdate = await product.findByPk(productId);
+      if (!productToUpdate) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      productToUpdate.isActive = true;
+      await productToUpdate.save();
+  
+      res.status(200).json({ message: "Product activated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to activate product", error: error.message });
+    }
+  },
+
 };
 
 module.exports = productControllers;

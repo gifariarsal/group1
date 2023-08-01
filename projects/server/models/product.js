@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       harga_produk: DataTypes.INTEGER,
       quantity: DataTypes.INTEGER,
       description: DataTypes.STRING,
+      isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
     },
     {
       sequelize,
