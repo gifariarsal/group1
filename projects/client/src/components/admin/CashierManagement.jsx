@@ -10,9 +10,7 @@ const CashierManagement = () => {
 
   const fetchCashier = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/cashier"
-      );
+      const response = await axios.get("http://localhost:8000/cashier");
       setCashier(response.data.result);
     } catch (error) {
       console.error("error fetching cashier data", error);
@@ -58,9 +56,28 @@ const CashierManagement = () => {
           </Button>
         </Box>
       </Box>
-      <Box p={8}>
+      <Box p={4} w={"full"} minH={"100vh"}>
         <VStack gap={4}>
-          
+          <Box
+            py={2}
+            px={8}
+            rounded={"lg"}
+            bg={"white"}
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            w={"full"}
+          >
+            <Text>username</Text>
+            <Text>email</Text>
+            <Text>status</Text>
+            <Box>
+              <Button mr={4} size={"sm"}>
+                Active
+              </Button>
+              <Button size={"sm"}>Inactive</Button>
+            </Box>
+          </Box>
         </VStack>
       </Box>
       <AddCashier isOpen={isOpen} onOpen={onOpen} onClose={onClose} />

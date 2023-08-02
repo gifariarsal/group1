@@ -101,7 +101,7 @@ const AdminLanding = () => {
             </Link>
           </VStack>
         </Box>
-        <Box w={"full"} bg={"gray.100"}>{renderPage()}</Box>
+        <Box w={"full"} bg={"gray.300"}>{renderPage()}</Box>
       </Flex>
     </Box>
   );
