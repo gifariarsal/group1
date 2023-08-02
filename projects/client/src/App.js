@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import AdminLanding from "./pages/admin/AdminLanding";
 import CashierLanding from "./pages/cashier/CashierLanding";
+import ProductManagement from "./pages/admin/ProductManagement";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -23,6 +24,7 @@ function App() {
       <Route path="/" element={<Login />} ></Route>
       <Route path="/admin/landing" element={<AdminLanding />} ></Route>
       <Route path="/cashier/landing" element={<CashierLanding />} ></Route>
+      <Route path="/admin/landing/product-management" element={<ProductManagement />} ></Route>
     </Routes>
     </>
   );

@@ -18,7 +18,7 @@ const AdminSidebar = () => {
           </Text>
         </Box>
 
-        <Link>
+        <Link to={"/admin/landing/product-management"}>
           <Box
             display={"flex"}
             alignItems={"center"}

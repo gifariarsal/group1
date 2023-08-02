@@ -7,9 +7,6 @@ const path = require("path");
 const db = require("../models");
 // db.sequelize.sync({ alter: true });
 
-const db = require("../models");
-// db.sequelize.sync({ alter: true });
-
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(
@@ -26,11 +23,11 @@ app.use(express.json());
 
 //#region API ROUTES
 
-const { authRouter, profileRouter, productRouter } = require("./router");
+const { authRouter, profileRouter, productRouter, categoriesRouter } = require("./router");
 // ===========================
 // NOTE : Add your routes here
 
-app.use("/api", authRouter, profileRouter, productRouter)
+app.use("/api", authRouter, profileRouter, productRouter, categoriesRouter)
 app.use("/", express.static(path.resolve(__dirname,"../")))
 
 app.get("/api", (req, res) => {
