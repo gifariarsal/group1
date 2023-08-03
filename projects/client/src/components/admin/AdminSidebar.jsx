@@ -27,7 +27,6 @@ const AdminSidebar = () => {
   return (
     <Box as={"aside"} w={"64"} bg={"#2C3E50"} color="white" minH="100vh">
       <VStack spacing="2" align="stretch">
-        {/* Sidebar header */}
         <Box w={"full"} bg={"#D27321"} textAlign={"center"}>
           <Text fontSize="xl" fontWeight="bold" p="4">
             Admin Dashboard
@@ -57,7 +56,7 @@ const AdminSidebar = () => {
             p={"4"}
             _hover={{ bg: "#4E586E" }}
           >
-            <IoPersonOutline size={24} />
+            <IoPersonOutline size={10} />
             <Text fontSize="lg" fontWeight="bold" ml={2}>
               Cashier Management
             </Text>

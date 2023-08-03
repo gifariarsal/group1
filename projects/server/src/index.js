@@ -23,12 +23,12 @@ app.use(express.json());
 
 //#region API ROUTES
 
-const { authRouter, profileRouter, productRouter } = require("./router");
+const { authRouter, profileRouter, productRouter, cashierRouter } = require("./router");
 // ===========================
 // NOTE : Add your routes here
 
-app.use("/api", authRouter, profileRouter, productRouter)
-app.use("/", express.static(path.resolve(__dirname,"../")))
+app.use("/api", authRouter, profileRouter, productRouter, cashierRouter)
+app.use("/public", express.static(path.resolve(__dirname,"../")))
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

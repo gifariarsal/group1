@@ -17,9 +17,7 @@ const authControllers = {
       });
 
       if (data)
-        return res
-          .status(500)
-          .json({ message: "Username or email already exists" });
+        return res.status(500).json({ message: "Username or email already exists" });
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -43,9 +41,7 @@ const authControllers = {
         });
       });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Register failed", error: error.message });
+      return res.status(500).json({ message: "Register failed", error: error.message });
     }
   },
 
@@ -77,15 +73,11 @@ const authControllers = {
         role: checkLogin.role
       };
 
-      const token = jwt.sign(payload, process.env.JWT_KEY, {
-        expiresIn: "24h",
-      });
+      const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "24h" });
 
       return res.status(200).json({ message: "Login success", token: token, role: checkLogin.role });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Login failed", error: error.message });
+      return res.status(500).json({ message: "Login failed", error: error.message });
     }
   },
 
@@ -104,10 +96,7 @@ const authControllers = {
       const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "2h" });
       const redirect = `http://localhost:3000/verification/${token}`;
 
-      const data = await fs.readFile(
-        path.resolve(__dirname, "../email/forgotPassword.html"),
-        "utf-8"
-      );
+      const data = await fs.readFile(path.resolve(__dirname, "../email/forgotPassword.html"), "utf-8");
       const tempCompile = handlebars.compile(data);
       const tempResult = tempCompile({ redirect });
       await transporter.sendMail({
@@ -116,11 +105,7 @@ const authControllers = {
         subject: "Forgot Password",
         html: tempResult,
       });
-      return res
-        .status(200)
-        .json({
-          message: "Request accepted. Check your email to reset your password",
-        });
+      return res.status(200).json({ message: "Request accepted. Check your email to reset your password" });
     } catch (error) {
       return res.status(500).json({ message: "Failed to send request" });
     }
@@ -137,9 +122,7 @@ const authControllers = {
 
       await db.sequelize.transaction(async (t) => {
         const result = await users.update(
-          {
-            password: hashedPassword,
-          },
+          { password: hashedPassword },
           { where: { id }, transaction: t }
         );
 
@@ -158,35 +141,6 @@ const authControllers = {
       return res.status(200).json({ message: "Your password has been reset successfully" });
     } catch (error) {
       return res.status(500).json({ message: "Failed to reset your password", error: error.message });
-    }
-  },
-
-  cashierActive: async (req, res) => {
-    try {
-      await db.sequelize.transaction(async (t) => {
-        const updateCashier = await users.update(
-          { isActive: true },
-          { transaction: t }
-        );
-
-        res.status(200).json({ message: "Cashier active!" });
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Error updating cashier status", error: error.message })
-    }
-  },
-
-  cashierInActive: async (req, res) => {
-    try {
-      await db.sequelize.transaction(async (t) => {
-        const updateCashier = await users.update(
-          { isActive: false },
-          { transaction: t }
-        );
-        res.status(200).json({ message: "Cashier inactive!" });
-      })
-    } catch (error) {
-      res.status(500).json({ message: "Error updating cashier status", error: error.message })
     }
   },
 };

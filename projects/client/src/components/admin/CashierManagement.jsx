@@ -1,29 +1,93 @@
-import { Box, Button, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import AddCashier from "./AddCashier";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setCashier } from "../../redux/reducer/UserReducer";
+import { LuEdit, LuSave } from "react-icons/lu";
+import { Link } from "react-router-dom";
+import ChangeEmailModal from "./ChangeEmailModal";
+import ChangeUsernameModal from "./ChangeUsername";
 
 const CashierManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [cashier, setCashier] = useState([]);
+  const dispatch = useDispatch();
+  const cashierList = useSelector((state) => state.UserReducer.cashier);
 
-  const fetchCashier = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/cashier");
-      setCashier(response.data.result);
-    } catch (error) {
-      console.error("error fetching cashier data", error);
-    }
+  const {
+    isOpen: isOpenUsername,
+    onOpen: onOpenUsername,
+    onClose: onCloseUsername,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenEmail,
+    onOpen: onOpenEmail,
+    onClose: onCloseEmail,
+  } = useDisclosure();
+
+  const onUsernameChange = () => {
+    onOpenUsername();
+  };
+  const onEmailChange = () => {
+    onOpenEmail();
   };
 
   useEffect(() => {
     fetchCashier();
   }, []);
 
+  const fetchCashier = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/cashier");
+      dispatch(setCashier(response.data.data));
+    } catch (error) {
+      console.log("error fetching cashier data", error);
+    }
+  };
+
+  const deactiveCashier = async (id) => {
+    try {
+      const res = await axios.patch(`http://localhost:8000/api/cashier/deactivate?id=${id}`);
+      alert(res.data.message);
+      fetchCashier();
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const activeCashier = async (id) => {
+    try {
+      const res = await axios.patch(`http://localhost:8000/api/cashier/activate?id=${id}`);
+      alert(res.data.message);
+      fetchCashier();
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   const onCreate = () => {
     onOpen();
   };
+
   return (
     <Box w={"full"} minH={"100vh"}>
       <Box
@@ -39,17 +103,44 @@ const CashierManagement = () => {
         px={8}
       >
         <Box>
-          <Text fontSize={"2xl"} fontWeight={"medium"}>
+          <Text fontSize={{ base:"md", lg:"2xl"}} fontWeight={"medium"}>
             Cashier Management
           </Text>
         </Box>
         <Box>
+          <Menu>
+            <MenuButton
+              as={Button}
+              variant={"solid"}
+              cursor={"pointer"}
+              bg={"white"}
+              rounded={"lg"}
+              border={"1px"}
+              borderColor={"#D27321"}
+            >
+              Edit Cashier
+            </MenuButton>
+            <MenuList w={{ md:"50px", lg:"100px"}}>
+              <Button
+                variant={"unstyled"}
+                w={"full"}
+                onClick={onUsernameChange}
+              >
+                <MenuItem>Change Username</MenuItem>
+              </Button>
+              <Button variant={"unstyled"} w={"full"} onClick={onEmailChange}>
+                <MenuItem>Change Email</MenuItem>
+              </Button>
+            </MenuList>
+          </Menu>
           <Button
             onClick={onCreate}
             gap={2}
             rounded={"lg"}
-            bg={"#F9CDA6"}
-            _hover={{ bg: "#F2D7C0" }}
+            bg={"#D27321"}
+            ml={4}
+            color={"white"}
+            _hover={{ bg: "#E38C41" }}
           >
             <IoAddOutline size={24} />
             Add Cashier
@@ -57,30 +148,64 @@ const CashierManagement = () => {
         </Box>
       </Box>
       <Box p={4} w={"full"} minH={"100vh"}>
-        <VStack gap={4}>
-          <Box
-            py={2}
-            px={8}
-            rounded={"lg"}
-            bg={"white"}
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-            w={"full"}
-          >
-            <Text>username</Text>
-            <Text>email</Text>
-            <Text>status</Text>
-            <Box>
-              <Button mr={4} size={"sm"}>
-                Active
-              </Button>
-              <Button size={"sm"}>Inactive</Button>
-            </Box>
-          </Box>
-        </VStack>
+        <Table variant={"simple"}>
+          <Thead>
+            <Tr>
+              <Th>Avatar</Th>
+              <Th>Username</Th>
+              <Th>Email</Th>
+              <Th>Status</Th>
+              <Th>Change Status</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {cashierList.map((cashier) => (
+              <Tr key={cashier.id}>
+                <Td>
+                  <Avatar
+                    size={"sm"}
+                    name={cashier.username}
+                    src={cashier.imgProfile}
+                  />
+                </Td>
+                <Td>{cashier.username}</Td>
+                <Td>{cashier.email}</Td>
+                <Td>{cashier.isActive ? "Active" : "Inactive"}</Td>
+                <Td>
+                  {cashier.isActive ? (
+                    <Button
+                      colorScheme="green"
+                      size={"xs"}
+                      onClick={() => deactiveCashier(cashier.id)}
+                    >
+                      Active
+                    </Button>
+                  ) : (
+                    <Button
+                      colorScheme="red"
+                      size={"xs"}
+                      onClick={() => activeCashier(cashier.id)}
+                    >
+                      Inactive
+                    </Button>
+                  )}
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       </Box>
       <AddCashier isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <ChangeEmailModal
+        isOpen={isOpenEmail}
+        onOpen={onOpenEmail}
+        onClose={onCloseEmail}
+      />
+      <ChangeUsernameModal
+        isOpen={isOpenUsername}
+        onOpen={onOpenUsername}
+        onClose={onCloseUsername}
+      />
     </Box>
   );
 };

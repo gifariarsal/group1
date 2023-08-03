@@ -1,4 +1,4 @@
-import { Box, Text, VStack, Flex } from "@chakra-ui/react";
+import { Box, Text, VStack, Flex, Icon } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,6 +29,7 @@ function withAuth(Component) {
     return <Component {...props} />;
   };
 }
+
 const AdminLanding = () => {
   const [activePage, setActivePage] = useState("product");
   const renderPage = () => {
@@ -43,15 +44,24 @@ const AdminLanding = () => {
         return null;
     }
   };
+
   return (
     <Box>
       <Navbar />
-      <Flex>
-        <Box w={"25%"} bg={"#2C3E50"} color="white" minH="100vh">
+      <Flex flexDir={{ base: "column", md: "row" }}>
+        <Box
+          w={{ base: "100%", md: "25%" }}
+          bg={"#2C3E50"}
+          color="white"
+          minH="100vh"
+        >
           <VStack spacing="2" align="stretch">
-            {/* Sidebar header */}
             <Box w={"full"} bg={"#D27321"} textAlign={"center"}>
-              <Text fontSize="xl" fontWeight="bold" p="4">
+              <Text
+                fontSize={{ base: "2xl", md: "18" }}
+                fontWeight="bold"
+                p="4"
+              >
                 Admin Dashboard
               </Text>
             </Box>
@@ -65,8 +75,16 @@ const AdminLanding = () => {
                 bg={"#2C3E50"}
                 _hover={{ bg: "#4E586E" }}
               >
-                <IoBagHandleOutline size={24} />
-                <Text fontSize="lg" fontWeight="bold" ml={2}>
+                <Icon
+                  as={IoBagHandleOutline}
+                  w={{ base: 4, md: 6 }}
+                  h={{ base: 4, md: 6 }}
+                />
+                <Text
+                  fontSize={{ base: "lg", md: "18" }}
+                  fontWeight="bold"
+                  ml={2}
+                >
                   Product Management
                 </Text>
               </Box>
@@ -79,8 +97,16 @@ const AdminLanding = () => {
                 p={"4"}
                 _hover={{ bg: "#4E586E" }}
               >
-                <IoPersonOutline size={24} />
-                <Text fontSize="lg" fontWeight="bold" ml={2}>
+                <Icon
+                  as={IoPersonOutline}
+                  w={{ base: 4, md: 6 }}
+                  h={{ base: 4, md: 6 }}
+                />
+                <Text
+                  fontSize={{ base: "lg", md: "18" }}
+                  fontWeight="bold"
+                  ml={2}
+                >
                   Cashier Management
                 </Text>
               </Box>
@@ -93,15 +119,23 @@ const AdminLanding = () => {
                 p={"4"}
                 _hover={{ bg: "#4E586E" }}
               >
-                <IoCartOutline size={24} />
-                <Text fontSize="lg" fontWeight="bold" ml={2}>
+                <Icon
+                  as={IoCartOutline}
+                  w={{ base: 4, md: 6 }}
+                  h={{ base: 4, md: 6 }}
+                />
+                <Text
+                  fontSize={{ base: "lg", md: "18" }}
+                  fontWeight="bold"
+                  ml={2}
+                >
                   Sales Report
                 </Text>
               </Box>
             </Link>
           </VStack>
         </Box>
-        <Box w={"full"} bg={"gray.300"}>{renderPage()}</Box>
+        <Box w={"full"}>{renderPage()}</Box>
       </Flex>
     </Box>
   );

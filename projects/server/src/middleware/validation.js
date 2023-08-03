@@ -60,18 +60,10 @@ const validateResetPassword = [
 ];
 
 const validateChangeUsername = [
-  body("currentUsername")
-    .notEmpty()
-    .withMessage("Current username is required"),
   body("newUsername").notEmpty().withMessage("New username is required"),
 ];
 
 const validateChangeEmail = [
-  body("currentEmail")
-    .notEmpty()
-    .withMessage("Current email is required")
-    .isEmail()
-    .withMessage("Invalid email format"),
   body("newEmail")
     .notEmpty()
     .withMessage("Email is required")

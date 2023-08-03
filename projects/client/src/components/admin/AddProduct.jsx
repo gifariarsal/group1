@@ -20,12 +20,8 @@ import * as Yup from "yup";
 import axios from "axios";
 import MainButton from "../buttons/MainButton";
 import { useFormik } from "formik";
-import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
-const AddCashier = ({ isOpen, onClose }) => {
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
-
+const AddProduct = ({ isOpen, onClose }) => {
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     email: Yup.string()
@@ -110,39 +106,6 @@ const AddCashier = ({ isOpen, onClose }) => {
                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
               )}
             </FormControl>
-            <FormControl
-              isRequired
-              isInvalid={formik.touched.password && formik.errors.password}
-            >
-              <FormLabel mt={4}>Password</FormLabel>
-              <InputGroup>
-                <Input
-                  id="password"
-                  name="password"
-                  type={show ? "text" : "password"}
-                  _placeholder={{
-                    fontSize: "xs",
-                    color: "gray.500",
-                  }}
-                  rounded={"lg"}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                />
-                <InputRightElement width="3.5rem">
-                  <Button h="1.75rem" size="sm" onClick={handleClick}>
-                    {show ? (
-                      <IoEyeOffOutline size={"20px"} />
-                    ) : (
-                      <IoEyeOutline size={"20px"} />
-                    )}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              {formik.touched.password && formik.errors.password && (
-                <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
-              )}
-            </FormControl>
           </ModalBody>
           <ModalFooter>
             <MainButton content="Create Cashier" />
@@ -153,4 +116,4 @@ const AddCashier = ({ isOpen, onClose }) => {
   );
 };
 
-export default AddCashier;
+export default AddProduct;
