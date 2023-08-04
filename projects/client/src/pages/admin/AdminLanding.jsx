@@ -1,15 +1,9 @@
 import { Box, Text, VStack, Flex, Icon } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { Link, useNavigate } from "react-router-dom";
-import ProductManagement from "../../components/admin/ProductManagement";
-import CashierManagement from "../../components/admin/CashierManagement";
-import SalesReport from "../../components/admin/SalesReport";
-import {
-  IoBagHandleOutline,
-  IoCartOutline,
-  IoPersonOutline,
-} from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import AdminSidebar from "../../components/admin/AdminSidebar";
+
 
 function withAuth(Component) {
   return function WrappedComponent(props) {
