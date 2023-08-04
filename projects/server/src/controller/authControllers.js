@@ -94,18 +94,18 @@ const authControllers = {
         email: checkEmail.email,
       };
       const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "2h" });
-      const redirect = `http://localhost:3000/verification/${token}`;
+      // const redirect = `http://localhost:3000/verification/${token}`;
 
-      const data = await fs.readFile(path.resolve(__dirname, "../email/forgotPassword.html"), "utf-8");
-      const tempCompile = handlebars.compile(data);
-      const tempResult = tempCompile({ redirect });
-      await transporter.sendMail({
-        from: process.env.user_gmail,
-        to: email,
-        subject: "Forgot Password",
-        html: tempResult,
-      });
-      return res.status(200).json({ message: "Request accepted. Check your email to reset your password" });
+      // const data = await fs.readFile(path.resolve(__dirname, "../email/forgotPassword.html"), "utf-8");
+      // const tempCompile = handlebars.compile(data);
+      // const tempResult = tempCompile({ redirect });
+      // await transporter.sendMail({
+      //   from: process.env.user_gmail,
+      //   to: email,
+      //   subject: "Forgot Password",
+      //   html: tempResult,
+      // });
+      return res.status(200).json({ message: "Request accepted. Check your email to reset your password", token: token });
     } catch (error) {
       return res.status(500).json({ message: "Failed to send request" });
     }
@@ -126,17 +126,17 @@ const authControllers = {
           { where: { id }, transaction: t }
         );
 
-        const data = await fs.readFile(
-          path.resolve(__dirname, "../email/resetPassword.html"),
-          "utf-8"
-        );
-        const tempCompile = handlebars.compile(data);
-        const tempResult = tempCompile();
-        await transporter.sendMail({
-          to: email,
-          subject: "Reset Password",
-          html: tempResult,
-        });
+        // const data = await fs.readFile(
+        //   path.resolve(__dirname, "../email/resetPassword.html"),
+        //   "utf-8"
+        // );
+        // const tempCompile = handlebars.compile(data);
+        // const tempResult = tempCompile();
+        // await transporter.sendMail({
+        //   to: email,
+        //   subject: "Reset Password",
+        //   html: tempResult,
+        // });
       });
       return res.status(200).json({ message: "Your password has been reset successfully" });
     } catch (error) {

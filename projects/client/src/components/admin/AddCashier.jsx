@@ -42,9 +42,9 @@ const AddCashier = ({ isOpen, onClose }) => {
         password: values.password,
       });
 
-      console.log("Cashier created successfully");
+      alert("Cashier created successfully");
     } catch (err) {
-      console.log("Failed to create cashier");
+      alert("Failed to create cashier");
     }
   };
 

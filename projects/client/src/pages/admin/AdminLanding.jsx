@@ -54,8 +54,9 @@ const AdminLanding = () => {
           bg={"#2C3E50"}
           color="white"
           minH="100vh"
+          mt={"60px"}
         >
-          <VStack spacing="2" align="stretch">
+          <VStack spacing="2" align="stretch" position={"fixed"}>
             <Box w={"full"} bg={"#D27321"} textAlign={"center"}>
               <Text
                 fontSize={{ base: "2xl", md: "18" }}
@@ -135,7 +136,9 @@ const AdminLanding = () => {
             </Link>
           </VStack>
         </Box>
-        <Box w={"full"}>{renderPage()}</Box>
+        <Box w={"full"} mt={"60px"}>
+          {renderPage()}
+        </Box>
       </Flex>
     </Box>
   );

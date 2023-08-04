@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -14,16 +13,15 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import AddCashier from "./AddCashier";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCashier } from "../../redux/reducer/UserReducer";
-import { LuEdit, LuSave } from "react-icons/lu";
-import { Link } from "react-router-dom";
 import ChangeEmailModal from "./ChangeEmailModal";
 import ChangeUsernameModal from "./ChangeUsername";
 
@@ -31,6 +29,7 @@ const CashierManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const cashierList = useSelector((state) => state.UserReducer.cashier);
+  const showAvatarColumn = useBreakpointValue({ base: false, md: true });
 
   const {
     isOpen: isOpenUsername,
@@ -103,7 +102,7 @@ const CashierManagement = () => {
         px={8}
       >
         <Box>
-          <Text fontSize={{ base:"md", lg:"2xl"}} fontWeight={"medium"}>
+          <Text fontSize={{ base: "xl", lg: "2xl" }} fontWeight={"medium"}>
             Cashier Management
           </Text>
         </Box>
@@ -120,7 +119,7 @@ const CashierManagement = () => {
             >
               Edit Cashier
             </MenuButton>
-            <MenuList w={{ md:"50px", lg:"100px"}}>
+            <MenuList w={{ md: "50px", lg: "100px" }}>
               <Button
                 variant={"unstyled"}
                 w={"full"}
@@ -151,26 +150,26 @@ const CashierManagement = () => {
         <Table variant={"simple"}>
           <Thead>
             <Tr>
-              <Th>Avatar</Th>
+              {showAvatarColumn && <Th>Avatar</Th>}
               <Th>Username</Th>
               <Th>Email</Th>
               <Th>Status</Th>
-              <Th>Change Status</Th>
             </Tr>
           </Thead>
           <Tbody>
             {cashierList.map((cashier) => (
               <Tr key={cashier.id}>
-                <Td>
-                  <Avatar
-                    size={"sm"}
-                    name={cashier.username}
-                    src={cashier.imgProfile}
-                  />
-                </Td>
+                {showAvatarColumn && (
+                  <Td>
+                    <Avatar
+                      size={"sm"}
+                      name={cashier.username}
+                      src={cashier.imgProfile}
+                    />
+                  </Td>
+                )}
                 <Td>{cashier.username}</Td>
                 <Td>{cashier.email}</Td>
-                <Td>{cashier.isActive ? "Active" : "Inactive"}</Td>
                 <Td>
                   {cashier.isActive ? (
                     <Button

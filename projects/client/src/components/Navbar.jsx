@@ -28,6 +28,9 @@ const Navbar = () => {
     <header>
       <Box>
         <Flex
+          pos={"fixed"}
+          w={"full"}
+          zIndex={10}
           bg={"white"}
           color={"#1c1c1c"}
           minH={"60px"}
@@ -37,7 +40,7 @@ const Navbar = () => {
           align={"center"}
           display={"flex"}
           justifyContent={"space-between"}
-          px={{ base: "4", lg:"8" }}
+          px={"8"}
         >
           <Image
             src={Logo}
