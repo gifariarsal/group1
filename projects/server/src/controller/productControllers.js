@@ -64,7 +64,7 @@ const productControllers = {
   },
 
   getProduct: async (req, res) => {
-    const { name, categoryId, sort_createdAt, sort_Harga, size, page } = req.query;
+    const { id, name, categoryId, sort_createdAt, sort_name, sort_Harga, size, page } = req.query;
     const limitPerPage = parseInt(size) || 10;
     const pageNumber = parseInt(page) || 1;
     const offset = limitPerPage * (pageNumber - 1);
@@ -72,11 +72,25 @@ const productControllers = {
     if (categoryId) findName.categoryId = categoryId;
 
     try {
+      let sortOptions = [];
+      if (sort_createdAt) {
+        sortOptions.push(["createdAt", sort_createdAt.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
+      }
+      if (id) {
+        sortOptions.push(["id", id.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
+      }
+      if (sort_Harga) {
+        sortOptions.push(["harga_produk", sort_Harga.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
+      }
+
+      if (sort_name) {
+        sortOptions.push(["name", sort_name.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
+      }
+
       const products = await product.findAll({
         attributes: { exclude: ["categoryId"] },
         where: findName,
         limit: limitPerPage,
-        productPage: pageNumber,
         offset,
         include: [
           {
@@ -84,8 +98,7 @@ const productControllers = {
             attributes: { exclude: ["createdAt", "updatedAt"] },
           },
         ],
-        order: [["createdAt", sort_createdAt || "DESC"]],
-        order: [["harga_produk", sort_Harga || "DESC"]]
+        order: sortOptions,
       });
 
       if (products.length === 0) {
@@ -99,9 +112,92 @@ const productControllers = {
         data: products,
       });
     } catch (error) {
+      res.status(500).json({ message: "Failed to get product", error: error.message });
+    }
+  },
+
+  updateProduct: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const {
+        name,
+        categoryId,
+        modal_produk,
+        harga_produk,
+        quantity,
+        description,
+        isActive,
+      } = req.body;
+  
+      const updatedFields = {
+        name,
+        categoryId,
+        modal_produk,
+        harga_produk,
+        quantity,
+        description,
+        isActive,
+      };
+  
+      // Handle the product image update separately, only if there's a new image
+      if (req.file) {
+        updatedFields.productImg = req.file.path;
+      }
+  
+      const updatedProduct = await product.update(updatedFields, {
+        where: { id: productId },
+      });
+  
+      if (updatedProduct[0] === 0) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      res.status(200).json({
+        message: "Product updated successfully",
+        data: updatedProduct,
+      });
+    } catch (error) {
       res
         .status(500)
-        .json({ message: "Failed to get product", error: error.message });
+        .json({ message: "Failed to update product", error: error.message });
+    }
+  },
+
+  deactivateProduct: async (req, res) => {
+    try {
+      const updatedProduct = await product.update(
+        { isActive: false }, // Set isActive to false to deactivate the product
+        { where: { id: req.params.id } }
+      );
+
+      if (updatedProduct[0] === 0) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.status(200).json({ message: "Product deactivated successfully" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Failed to deactivate product", error: error.message });
+    }
+  },
+
+  activateProduct: async (req, res) => {
+    try {
+      const updatedProduct = await product.update(
+        { isActive: true }, // Set isActive to true to activate the product
+        { where: { id: req.params.id } }
+      );
+
+      if (updatedProduct[0] === 0) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.status(200).json({ message: "Product activated successfully" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Failed to activate product", error: error.message });
     }
   },
 };

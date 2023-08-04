@@ -92,7 +92,7 @@ const ListCategory = () => {
                   category.name
                 )}
               </Td>
-              <Td>{category.isActive ? "Active" : "Inactive"}</Td>
+              <Td color={category.isActive ? "green" : "red"} fontWeight={"bold"}>{category.isActive ? "Active" : "Inactive"}</Td>
               <Td>
                 {editingId === category.id ? (
                   <Button colorScheme="blue" size="sm" onClick={handleSave}>

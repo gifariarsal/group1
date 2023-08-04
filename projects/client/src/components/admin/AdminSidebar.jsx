@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const AdminSidebar = () => {
   return (
-    <Box as={"aside"} w={"64"} bg={"#2C3E50"} color="white" minH="100vh">
+    <Box as={"aside"} w={"64"} bg={"#2C3E50"} color="white" minH="100vw">
       <VStack spacing="2" align="stretch">
         {/* Sidebar header */}
         <Box w={"full"} bg={"#D27321"} textAlign={"center"}>

@@ -1,8 +1,9 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Flex, } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import CashierSidebar from "../../components/cashier/CashierSidebar";
+import ListProduct from "../../components/cashier/ListProduct";
 
 function withAuth(Component) {
   return function WrappedComponent(props) {
@@ -27,10 +28,14 @@ const CashierLanding = () => {
     <Box>
       <Navbar />
       <Box w={"100%"} bg={"red.100"}>
-        <Box>
-          <CashierSidebar />
-        </Box>
-        <Box></Box>
+        <Flex>
+          <Box>
+            <CashierSidebar />
+          </Box>
+          <Box>
+            <ListProduct />
+          </Box>
+        </Flex>
       </Box>
     </Box>
   );
