@@ -22,7 +22,7 @@ function withAuth(Component) {
     return <Component {...props} />;
   };
 }
-const Landing = () => {
+const AdminLanding = () => {
   return (
     <Box>
       <Navbar />
@@ -39,4 +39,4 @@ const Landing = () => {
   )
 }
 
-export default withAuth(Landing)
+export default withAuth(AdminLanding);

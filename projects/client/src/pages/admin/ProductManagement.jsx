@@ -2,7 +2,6 @@ import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
 import CreateCategory from "../../components/admin/CreateCategory";
 import ListCategory from "../../components/admin/ListCategory";
 import ListProduct from "../../components/products/ListProduct";
@@ -32,7 +31,6 @@ const ProductManagement = () => {
       <Box w={"100%"} bg={"red.100"}>
         <Flex>
           <Box>
-            <AdminSidebar />
           </Box>
           <Stack ml={10} mt={5}>
             <Box bg={"white"}>

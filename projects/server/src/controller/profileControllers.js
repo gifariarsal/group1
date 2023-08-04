@@ -11,6 +11,8 @@ const profileControllers = {
   changeUsername: async (req, res) => {
     try {
       const { currentUsername, newUsername } = req.body;
+      const usernameExists = await user.findOne({ where: { username: currentUsername }});
+      if (!usernameExists) return res.status(400).json({ message: "Username not found" });
 
       const newUsernameExists = await user.findOne({
         where: { username: newUsername },
@@ -19,59 +21,38 @@ const profileControllers = {
       if (newUsernameExists)
         return res.status(400).json({ message: "Username already exists" });
 
-      const usernameExists = await user.findOne({
-        where: { username: currentUsername },
-      });
-
-      if (!usernameExists)
-        return res.status(400).json({ message: "Username not found" });
-
       await db.sequelize.transaction(async (t) => {
         const result = await user.update(
           { username: newUsername },
-          { where: { id: req.user.id }, transaction: t }
+          { where: { username: currentUsername }, transaction: t }
         );
-        res
-          .status(200)
-          .json({
-            message: "Username changed successfully",
-            username: newUsername,
-          });
+        res.status(200).json({ message: "Username changed successfully", username: newUsername });
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to change username", error: error.message });
+      res.status(500).json({ message: "Failed to change username", error: error.message });
     }
   },
 
   changeEmail: async (req, res) => {
     try {
       const { currentEmail, newEmail } = req.body;
+      const emailExists = await user.findOne({ where: { email: currentEmail }});
+      if (!emailExists) return res.status(400).json({ message: "Email not found" });
 
       const newEmailExists = await user.findOne({ where: { email: newEmail } });
 
       if (newEmailExists)
         return res.status(400).json({ message: "Email already exists" });
 
-      const emailExists = await user.findOne({
-        where: { email: currentEmail },
-      });
-      if (!emailExists)
-        return res.status(400).json({ message: "Email not found" });
-
-      let result;
       await db.sequelize.transaction(async (t) => {
-        result = await user.update(
-          { email: newEmail, isVerified: false },
+        const result = await user.update(
+          { email: newEmail },
           { where: { email: currentEmail }, transaction: t }
         );
       });
       res.status(200).json({ message: "Email changed successfully." });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to change email", error: error.message });
+      res.status(500).json({ message: "Failed to change email", error: error.message });
     }
   },
 
@@ -96,9 +77,7 @@ const profileControllers = {
       });
       res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to change password", error: error.message });
+      res.status(500).json({ message: "Failed to change password", error: error.message });
     }
   },
 
@@ -119,12 +98,10 @@ const profileControllers = {
           { where: { id } },
           { transaction: t }
         );
+        res.status(200).json({ message: "Avatar changed successfully" });
       });
-      res.status(200).json({ message: "Avatar changed successfully" });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to change avatar", error: error.message });
+      res.status(500).json({ message: "Failed to change avatar", error: error.message });
     }
   },
 };
