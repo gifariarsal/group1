@@ -23,11 +23,11 @@ app.use(express.json());
 
 //#region API ROUTES
 
-const { authRouter, profileRouter, productRouter, categoriesRouter } = require("./router");
+const { authRouter, profileRouter, productRouter, categoriesRouter, cartRouter } = require("./router");
 // ===========================
 // NOTE : Add your routes here
 
-app.use("/api", authRouter, profileRouter, productRouter, categoriesRouter)
+app.use("/api", authRouter, profileRouter, productRouter, categoriesRouter, cartRouter)
 app.use("/", express.static(path.resolve(__dirname,"../")))
 
 app.get("/api", (req, res) => {

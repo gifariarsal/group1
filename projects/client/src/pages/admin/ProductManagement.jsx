@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import CreateCategory from "../../components/admin/CreateCategory";
 import ListCategory from "../../components/admin/ListCategory";
+import ListProduct from "../../components/products/ListProduct";
 
 function withAuth(Component) {
   return function WrappedComponent(props) {
@@ -34,13 +35,16 @@ const ProductManagement = () => {
             <AdminSidebar />
           </Box>
           <Stack ml={10} mt={5}>
-            <Box>
+            <Box bg={"white"}>
               <CreateCategory />
             </Box>
-            <Box mt={5}>
+            <Box bg={"white"} mt={5}>
               <ListCategory />
             </Box>
           </Stack>
+          <Box mt={5} ml={10} bg={"white"}>
+            <ListProduct/>
+          </Box>
         </Flex>
       </Box>
     </Box>
