@@ -1,7 +1,8 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ListProduct from "../products/ListProduct";
+import ListCategory from "./ListCategory";
+import CreateCategory from "./CreateCategory";
 
 function withAuth(Component) {
   return function WrappedComponent(props) {
@@ -21,7 +22,7 @@ function withAuth(Component) {
     return <Component {...props} />;
   };
 }
-const ProductManagement = () => {
+const CategoryManagement = () => {
   return (
     <Box w={"full"} minH={"100vh"}>
       <Box
@@ -38,15 +39,20 @@ const ProductManagement = () => {
       >
         <Box>
           <Text fontSize={{ base: "xl", lg: "2xl" }} fontWeight={"medium"}>
-            Cashier Management
+            Category Management
           </Text>
         </Box>
       </Box>
       <Box p={4} w={"full"} minH={"100vh"}>
-        <ListProduct />
+        <Box bg={"white"}>
+          <CreateCategory />
+        </Box>
+        <Box bg={"white"} mt={5}>
+          <ListCategory />
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export default withAuth(ProductManagement);
+export default withAuth(CategoryManagement);

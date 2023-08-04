@@ -28,7 +28,7 @@ const { authRouter, profileRouter, productRouter, categoriesRouter, cartRouter, 
 // NOTE : Add your routes here
 
 app.use("/api", authRouter, profileRouter, productRouter, categoriesRouter, cartRouter, cashierRouter)
-app.use("/", express.static(path.resolve(__dirname,"../")))
+app.use("/public", express.static(path.resolve(__dirname,"../public")))
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
