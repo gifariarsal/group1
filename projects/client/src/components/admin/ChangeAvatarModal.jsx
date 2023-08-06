@@ -1,6 +1,6 @@
 import {
+  Button,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Input,
   Modal,
@@ -13,45 +13,40 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useFormik } from "formik";
-import React from "react";
-import * as Yup from "yup";
-import MainButton from "../buttons/MainButton";
+import React, { useState } from "react";
 
 const ChangeAvatarModal = ({ isOpen, onClose }) => {
-  const validationSchema = Yup.object().shape({
-    currentEmail: Yup.string()
-      .email("Invalid email address format")
-      .required("Current Email is required"),
-    newEmail: Yup.string()
-      .email("Invalid email address format")
-      .required("New Email is required"),
-  });
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
-  const handleSubmit = async (values) => {
-    try {
-      await axios.patch(`http://localhost:8000/api//profile/change-email`, {
-        currentEmail: values.currentEmail,
-        newEmail: values.newEmail,
-      });
-
-      alert("Email changed successfully");
-    } catch (error) {
-      alert("Error changing email");
-    }
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    setProfilePhoto(file);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      currentEmail: "",
-      newEmail: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      handleSubmit(values);
+  const handleSave = async () => {
+    if (!profilePhoto) {
+      console.log("No profile photo selected.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("imgProfile", profilePhoto);
+    const token = localStorage.getItem("token");
+    try {
+      await axios.patch("http://localhost:8000/api/profile/change-avatar", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // onSave(profilePhoto)
+      alert("Successfully updated profile photo!")
+      window.location.reload();
       onClose();
-    },
-  });
+    } catch (error) {
+      alert("Failed to update profile photo!");
+      console.log("Error uploading profile photo:", error);
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -59,59 +54,32 @@ const ChangeAvatarModal = ({ isOpen, onClose }) => {
       <ModalContent>
         <ModalHeader>
           <Text fontSize={"xl"} fontWeight={700}>
-            Change Email
+            Change Avatar
           </Text>
         </ModalHeader>
         <ModalCloseButton />
-        <form onSubmit={formik.handleSubmit}>
-          <ModalBody>
-            <FormControl
-              isRequired
-              isInvalid={
-                formik.touched.currentEmail && formik.errors.currentEmail
-              }
-            >
-              <FormLabel mt={4}>Current Email</FormLabel>
-              <Input
-                id="currentEmail"
-                name="currentEmail"
-                type="email"
-                rounded={"lg"}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.currentEmail}
-                focusBorderColor="#C77DFF"
-              />
-              {formik.touched.currentEmail && formik.errors.currentEmail && (
-                <FormErrorMessage>
-                  {formik.errors.currentEmail}
-                </FormErrorMessage>
-              )}
-            </FormControl>
-            <FormControl
-              isRequired
-              isInvalid={formik.touched.newEmail && formik.errors.newEmail}
-            >
-              <FormLabel mt={4}>New Email</FormLabel>
-              <Input
-                id="newEmail"
-                name="newEmail"
-                type="email"
-                rounded={"lg"}
-                focusBorderColor="#C77DFF"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.newEmail}
-              />
-              {formik.touched.newEmail && formik.errors.newEmail && (
-                <FormErrorMessage>{formik.errors.newEmail}</FormErrorMessage>
-              )}
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <MainButton content="Save" />
-          </ModalFooter>
-        </form>
+        <ModalBody>
+          <FormControl>
+            <FormLabel>Upload Photo</FormLabel>
+            <Input type="file" accept="image/*" onChange={handleImageUpload} />
+          </FormControl>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            onClick={handleSave}
+            display={"flex"}
+            justifyContent={"center"}
+            w={"100%"}
+            mt={"6"}
+            rounded={"lg"}
+            color={"white"}
+            bgColor={"#C1600C"}
+            _hover={{ bgColor: "#EC8D3C" }}
+            _active={{ bgColor: "#88450B" }}
+          >
+            Save
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );

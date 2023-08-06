@@ -16,7 +16,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import AddCashier from "./AddCashier";
 import axios from "axios";
@@ -50,10 +50,6 @@ const CashierManagement = () => {
     onOpenEmail();
   };
 
-  useEffect(() => {
-    fetchCashier();
-  }, []);
-
   const fetchCashier = async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/cashier");
@@ -63,9 +59,15 @@ const CashierManagement = () => {
     }
   };
 
+  useEffect(() => {
+    fetchCashier();
+  }, []);
+
   const deactiveCashier = async (id) => {
     try {
-      const res = await axios.patch(`http://localhost:8000/api/cashier/deactivate?id=${id}`);
+      const res = await axios.patch(
+        `http://localhost:8000/api/cashier/deactivate?id=${id}`
+      );
       alert(res.data.message);
       fetchCashier();
     } catch (err) {
@@ -75,7 +77,9 @@ const CashierManagement = () => {
 
   const activeCashier = async (id) => {
     try {
-      const res = await axios.patch(`http://localhost:8000/api/cashier/activate?id=${id}`);
+      const res = await axios.patch(
+        `http://localhost:8000/api/cashier/activate?id=${id}`
+      );
       alert(res.data.message);
       fetchCashier();
     } catch (err) {
@@ -87,6 +91,9 @@ const CashierManagement = () => {
     onOpen();
   };
 
+  const getImageUrl = (imagePath) => {
+    return `http://localhost:8000/${imagePath}`;
+  };
   return (
     <Box w={"full"} minH={"100vh"}>
       <Box
@@ -164,7 +171,7 @@ const CashierManagement = () => {
                     <Avatar
                       size={"sm"}
                       name={cashier.username}
-                      src={cashier.imgProfile}
+                      src={getImageUrl(cashier.imgProfile)}
                     />
                   </Td>
                 )}

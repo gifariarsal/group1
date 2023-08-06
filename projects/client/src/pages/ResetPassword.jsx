@@ -33,7 +33,7 @@ const ResetPassword = () => {
   const resetPass = async (values) => {
     try {
       const res = await axios.patch(
-        "https://minpro-blog.purwadhikabootcamp.com/api/auth/resetPass",
+        "http://localhost:8000/api/auth/reset-password",
         values,
         {
           headers: {
@@ -41,8 +41,9 @@ const ResetPassword = () => {
           },
         }
       );
+      alert("Your password has been reset successfully");
     } catch (error) {
-      console.error("Error", error);
+      alert("Failed to reset your password");
     }
   };
 

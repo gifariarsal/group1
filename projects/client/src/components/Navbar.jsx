@@ -9,12 +9,15 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutSuccess } from "../redux/reducer/AuthReducer";
 import Logo from "../assets/cashien_logo.png";
+import axios from "axios";
+import ChangeAvatarModal from "./admin/ChangeAvatarModal";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -22,6 +25,35 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logoutSuccess(localStorage.token));
     navigate("/");
+  };
+  const [avatar, setAvatar] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const onOpenAvatar = () => {
+    onOpen();
+  };
+
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:8000/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const { imgProfile } = response.data.data;
+      setAvatar(imgProfile);
+    } catch (error) {
+      console.log("error fetching cashier data", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const getImageUrl = (imagePath) => {
+    return `http://localhost:8000/${imagePath}`;
   };
 
   return (
@@ -55,10 +87,10 @@ const Navbar = () => {
               cursor={"pointer"}
               minW={0}
             >
-              <Avatar size={"sm"} name="User" src={"/profile"} />
+              <Avatar size={"sm"} name="User" src={getImageUrl(avatar)} />
             </MenuButton>
             <MenuList>
-              <Link to={"/user-profile"}>
+              <Link as={"button"} onClick={onOpenAvatar}>
                 <MenuItem>Change Avatar</MenuItem>
               </Link>
               <MenuDivider />
@@ -69,6 +101,7 @@ const Navbar = () => {
           </Menu>
         </Flex>
       </Box>
+      <ChangeAvatarModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
     </header>
   );
 };

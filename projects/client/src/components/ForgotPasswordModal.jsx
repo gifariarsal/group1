@@ -27,16 +27,15 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const forgotPass = async (values) => {
     try {
       await axios.put(
-        "https://minpro-blog.purwadhikabootcamp.com/api/auth/forgotPass",
+        "http://localhost:8000/api/auth/forgot-password",
         {
           email: values.email,
-          FE_URL: "http://localhost:3000",
         }
       );
 
-      console.log("Reset password link has been sent successfully");
+      alert("Reset password link has been sent successfully");
     } catch (error) {
-      console.error("Error sending password reset email:", error);
+      alert("Error sending password reset email:", error);
     }
   };
 

@@ -126,17 +126,17 @@ const authControllers = {
           { where: { id }, transaction: t }
         );
 
-        // const data = await fs.readFile(
-        //   path.resolve(__dirname, "../email/resetPassword.html"),
-        //   "utf-8"
-        // );
-        // const tempCompile = handlebars.compile(data);
-        // const tempResult = tempCompile();
-        // await transporter.sendMail({
-        //   to: email,
-        //   subject: "Reset Password",
-        //   html: tempResult,
-        // });
+        const data = await fs.readFile(
+          path.resolve(__dirname, "../email/resetPassword.html"),
+          "utf-8"
+        );
+        const tempCompile = handlebars.compile(data);
+        const tempResult = tempCompile();
+        await transporter.sendMail({
+          to: email,
+          subject: "Reset Password",
+          html: tempResult,
+        });
       });
       return res.status(200).json({ message: "Your password has been reset successfully" });
     } catch (error) {

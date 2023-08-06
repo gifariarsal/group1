@@ -18,7 +18,7 @@ export const UserReducer = createSlice({
 export const getCashier = () => {
   return async (dispatch) => {
     try {
-      const res = await axios.get("http://localhost:8000/api/category");
+      const res = await axios.get("http://localhost:8000/api/cashier");
       dispatch(setCashier(res.data.data));
     } catch (error) {
       console.log("Failed to fetch categories:", error);
