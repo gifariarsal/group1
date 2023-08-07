@@ -6,52 +6,60 @@ const Transaction = db.Transaction;
 const TransactionItem = db.TransactionItem;
 
 const cartController = {
-    createCart: async (req, res)=> {
+    createCart: async (req, res) => {
         const { id } = req.user;
-    
-        try{
-            let cart = await Cart.findOne({ where: {userId: id}});
-            if(!cart){
-                cart = await Cart.create({userId:id})
-            }
-            const {productId, quantity} = req.body;
-            const product = await Product.findByPk(productId);
-            if(!product){
-                return res.status(400).json({message: "Product not found"})
-            }
-            let cartItem = await CartItem.findOne({
-                where: {
-                    cartId: id,
-                    productId: productId
-                }})
-            if(!cartItem){
-                cartItem = await CartItem.create({
-                    cartId: id,
-                    productId: productId,
-                    quantity: quantity,
-                    price: product.harga_produk * quantity,
-                })
-            }else {
-                cartItem.quantity += +quantity;
-                cartItem.price = product.harga_produk * cartItem.quantity
-                await cartItem.save() }
-                
-                const cartIteme = await CartItem.findAll({
-                    where: {
-                        cartId: cart.id
-                    }
-                })
-                let totalHarga = 0;
-                cartIteme.forEach(item => {
-                    totalHarga += item.price
-                })
-                cart.totalHarga = totalHarga;
-                await cart.save();
-            return res.status(200).json({message: "Product added to cart", cartItem, cart});
-        }catch (error){
-            return res.status(400).json({message: error.message})
+      
+        try {
+          let cart = await Cart.findOne({ where: { userId: id } });
+          if (!cart) {
+            cart = await Cart.create({ userId: id });
+          }
+      
+          const { productId, quantity } = req.body;
+          const product = await Product.findByPk(productId);
+          if (!product) {
+            return res.status(400).json({ message: "Product not found" });
+          }
+      
+          let cartItem = await CartItem.findOne({
+            where: {
+              cartId: cart.id,
+              productId: productId,
+            },
+          });
+      
+          if (!cartItem) {
+            cartItem = await CartItem.create({
+              cartId: cart.id,
+              productId: productId,
+              quantity: quantity,
+              price: product.harga_produk * quantity,
+            });
+          } else {
+            cartItem.quantity += +quantity;
+            cartItem.price = product.harga_produk * cartItem.quantity;
+            await cartItem.save();
+          }
+      
+          const cartItems = await CartItem.findAll({
+            where: {
+              cartId: cart.id,
+            },
+          });
+      
+          let totalPrice = 0;
+          cartItems.forEach((item) => {
+            totalPrice += item.price;
+          });
+      
+          cart.totalPrice = totalPrice;
+          await cart.save();
+      
+          return res.status(200).json({ message: "Product added to cart", cartItem, cart });
+        } catch (error) {
+          return res.status(400).json({ message: error.message });
         }
-    },
+      },
     
     removeCartItem: async (req, res) => {
         const { id } = req.user;
@@ -87,11 +95,12 @@ const cartController = {
                     cartId: cart.id
                 }
             })
-            let totalHarga = 0;
+            let totalPrice = 0;
             cartIteme.forEach(item => {
-                totalHarga += item.price
+                totalPrice += +item.price
             })
-            cart.totalHarga = totalHarga;
+        
+            cart.totalPrice = +totalPrice;
             await cart.save();
             return res.status(200).json({message: "Product removed from cart", cartItem, cart});
 
@@ -122,7 +131,7 @@ const cartController = {
         }
     },
 
-    checkoutTransaction: async (req, res) => {
+    checkout: async (req, res) => {
         const { id } = req.user;
 
         try {
@@ -154,7 +163,7 @@ const cartController = {
             }
 
             await CartItem.destroy({ where: { cartId: cart.id } });
-            cart.totalHarga = 0;
+            cart.totalPrice = 0;
             await cart.save();
 
             return res.status(200).json({ message: "Checkout successful", transaction });

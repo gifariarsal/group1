@@ -17,6 +17,7 @@ import {
 
 import SortAlphabetical from "../products/SortAlphabetical";
 import SortPrice from "../products/SortPrice";
+import AddToCartButton from "./AddToCartButton";
 
 const API_URL = "http://localhost:8000/api/product";
 const CATEGORY_URL = "http://localhost:8000/api/category";
@@ -69,6 +70,12 @@ const ListProduct = () => {
         params: queryParams,
       });
 
+      const updatedProducts = response.data.data.map((product) => ({
+        ...product,
+        harga_produk: product.price, // Assuming that the API returns the price for each product as "price"
+        quantity: 1, // Assuming that the initial quantity is 1, you can set it based on your requirements.
+      }));
+      setProducts(updatedProducts);
       setProducts(response.data.data);
 
       // Update the totalPages based on the response headers
@@ -144,6 +151,34 @@ const ListProduct = () => {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1));
+  };
+  
+  const handleAddToCart = (productId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
+  
+    axios
+      .post(
+        "http://localhost:8000/api/cart",
+        { productId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        alert("Product added to cart");
+        // Refresh cart items after adding to cart using the function from props
+        // fetchCartItems();
+      })
+      .catch((error) => {
+        console.error("Failed to add product to cart", error);
+        alert("Failed to add product to cart");
+      });
   };
 
   if (loading) {
@@ -290,7 +325,7 @@ const ListProduct = () => {
               bg="white"
               boxShadow="md"
               transition="transform 0.2s"
-              _hover={{ transform: "translateY(-5px)" }}
+              _hover={{ transform: "translateY(-7px)", color: "teal" }}
             >
               <Text fontWeight="bold" fontSize="xl" mb="2">
                 {product.name}
@@ -305,6 +340,11 @@ const ListProduct = () => {
               />
               <Text>Category: {product.Category?.name}</Text>
               <Text>Price: {product.harga_produk}</Text>
+              <AddToCartButton
+                productId={product.id}
+                quantity={product.quantity}
+                harga_produk={product.harga_produk}
+              />
             </Box>
           </GridItem>
         ))}

@@ -44,6 +44,7 @@ const AdminLanding = () => {
         return <CashierManagement />;
       case "report":
         return <SalesReport />;
+        
       default:
         return null;
     }
