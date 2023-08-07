@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import CashierSidebar from "../../components/cashier/CashierSidebar";
 import ListProduct from "../../components/cashier/ListProduct";
+import Cart from "../../components/cashier/Cart";
 
 function withAuth(Component) {
   return function WrappedComponent(props) {
@@ -23,17 +24,23 @@ function withAuth(Component) {
     return <Component {...props} />;
   };
 }
+
+
+
 const CashierLanding = () => {
   return (
     <Box>
       <Navbar />
-      <Box w={"100%"} bg={"red.100"}>
-        <Flex>
-          <Box>
+      <Box w={"100%"} bg={"red.100"} >
+        <Flex >
+          <Box mt={"60px"}>
             <CashierSidebar />
           </Box>
-          <Box>
+          <Box mt={"60px"} w={"65%"}>
             <ListProduct />
+          </Box>
+          <Box bg={"whiteAlpha.500"} mt={"60px"}>
+            <Cart/>
           </Box>
         </Flex>
       </Box>
