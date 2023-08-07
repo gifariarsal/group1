@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import AdminLanding from "./pages/admin/AdminLanding";
 import CashierLanding from "./pages/cashier/CashierLanding";
 import ProductManagement from "./pages/admin/ProductManagement";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -21,10 +22,11 @@ function App() {
     {/* <Login /> */}
     {/* <Landing /> */}
     <Routes>
-      <Route path="/" element={<Login />} ></Route>
-      <Route path="/admin/landing" element={<AdminLanding />} ></Route>
-      <Route path="/cashier/landing" element={<CashierLanding />} ></Route>
-      <Route path="/admin/landing/product-management" element={<ProductManagement />} ></Route>
+      <Route path="/" element={<Login />} />
+      <Route path="/admin/landing" element={<AdminLanding />} />
+      <Route path="/cashier/landing" element={<CashierLanding />} />
+      <Route path="/admin/landing/product-management" element={<ProductManagement />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
     </Routes>
     </>
   );

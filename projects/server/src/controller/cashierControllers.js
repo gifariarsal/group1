@@ -10,6 +10,16 @@ const cashierControllers = {
       return res.status(500).json({ message: "Failed to retrieve cashiers", error: error.message });
     }
   },
+
+  getCashiersById: async (req, res) => {
+    try {
+      const cashiers = await users.findOne({ where: { username: req.user.username } });
+      return res.status(200).json({ message: "Cashiers retrieved successfully", data: cashiers });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to retrieve cashiers", error: error.message });
+    }
+  },
+
   cashierActive: async (req, res) => {
     try {
       const cashierId = req.query.id;

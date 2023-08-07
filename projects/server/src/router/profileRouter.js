@@ -16,7 +16,7 @@ router.patch("/profile/change-email", validateChangeEmail, validate, profileCont
 router.patch(
   "/profile/change-avatar",
   verifyToken,
-  multerUpload.single("avatars"),
+  multerUpload.single("imgProfile"),
   profileControllers.changeAvatar
 );
 
