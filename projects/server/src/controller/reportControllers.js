@@ -58,21 +58,14 @@ const reportControllers = {
 
   getDailySalesAggregate: async (req, res) => {
     try {
-      const { startDate, endDate } = req.query;
-
       const dailySales = await Transaction.findAll({
-        where: {
-          createdAt: {
-            [Op.between]: [new Date(startDate), new Date(endDate)],
-          },
-        },
         attributes: [
           [db.Sequelize.fn('date', db.Sequelize.col('createdAt')), 'transactionDate'],
           [db.Sequelize.fn('sum', db.Sequelize.col('totalPrice')), 'totalSales'],
         ],
         group: [db.Sequelize.fn('date', db.Sequelize.col('createdAt'))],
       });
-
+  
       return res.status(200).json({ data: dailySales });
     } catch (error) {
       return res.status(400).json({ message: error.message });

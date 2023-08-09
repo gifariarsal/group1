@@ -42,6 +42,7 @@ const ResetPassword = () => {
         }
       );
       alert("Your password has been reset successfully");
+      navigate("/");
     } catch (error) {
       alert("Failed to reset your password");
     }
@@ -55,7 +56,6 @@ const ResetPassword = () => {
     validationSchema: resetPasswordSchema,
     onSubmit: (values) => {
       resetPass(values);
-      navigate("/sign-in");
     },
   });
 
@@ -71,8 +71,10 @@ const ResetPassword = () => {
       justifyContent={"center"}
       alignItems={"center"}
       h={"100vh"}
+      bg={"radial-gradient(circle, rgba(158,169,193,1) 0%, rgba(78,88,110,1) 50%, rgba(44,62,80,1) 100%);"}
+      
     >
-      <Box boxShadow={"lg"} rounded={"2xl"} h={"70%"} w={"40vw"}>
+      <Box boxShadow={"lg"} bg={"white"} rounded={"2xl"} w={"40vw"}>
         <form onSubmit={formik.handleSubmit}>
           <VStack px={10} py={10} w={"full"}>
             <Text fontSize={"xl"} fontWeight={700}>

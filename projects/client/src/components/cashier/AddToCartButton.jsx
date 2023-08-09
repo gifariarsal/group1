@@ -21,7 +21,8 @@ const AddToCartButton = ({ productId, quantity, harga_produk }) => {
         }
       )
       .then(( response) => {
-        alert("Product added to cart");
+        console.log("Product added to cart");
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Failed to add product to cart", error);
@@ -30,7 +31,7 @@ const AddToCartButton = ({ productId, quantity, harga_produk }) => {
   };
 
   return (
-    <Button colorScheme="teal" onClick={handleAddToCart} mt="3">
+    <Button colorScheme="orange" onClick={handleAddToCart} mt="3">
       Add to Cart
     </Button>
   );

@@ -28,7 +28,7 @@ function withAuth(Component) {
     }, [login, navigate]);
 
     if (!login) {
-      return null; 
+      return null;
     }
 
     return <Component {...props} />;
@@ -64,8 +64,7 @@ const CreateCategory = () => {
       name: document.getElementById("name").value,
       isActive: document.getElementById("isActive").value === "true",
     };
-     dispatch(makeCategory(data)); 
-     
+    dispatch(makeCategory(data));
   };
 
   return (
@@ -76,16 +75,39 @@ const CreateCategory = () => {
         </Text>
         <FormControl id="name" isRequired>
           <FormLabel>Name Category</FormLabel>
-          <Input type="text" name="name" rounded="lg" placeholder="Name Category" borderColor={"red.500"} />
+          <Input
+            type="text"
+            name="name"
+            rounded="lg"
+            placeholder="Name Category"
+            borderColor={"red.500"}
+          />
         </FormControl>
         <FormControl id="isActive" isRequired>
           <FormLabel>isActive</FormLabel>
-          <Select value={selectedOption} onChange={handleOptionChange} rounded="lg" borderColor={"red.500"}>
+          <Select
+            value={selectedOption}
+            onChange={handleOptionChange}
+            rounded="lg"
+            borderColor={"red.500"}
+          >
             <option value="true">True</option>
             <option value="false">False</option>
           </Select>
         </FormControl>
-        <Button type="submit" colorScheme="blue" onClick={handleSubmit}>
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          display={"flex"}
+          justifyContent={"center"}
+          w={"100%"}
+          mt={"6"}
+          rounded={"lg"}
+          color={"white"}
+          bgColor={"#C1600C"}
+          _hover={{ bgColor: "#EC8D3C" }}
+          _active={{ bgColor: "#88450B" }}
+        >
           Submit
         </Button>
       </VStack>

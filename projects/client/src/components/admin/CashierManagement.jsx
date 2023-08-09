@@ -172,6 +172,7 @@ const CashierManagement = () => {
                       size={"sm"}
                       name={cashier.username}
                       src={getImageUrl(cashier.imgProfile)}
+                      border="1px solid #F9CDA6"
                     />
                   </Td>
                 )}

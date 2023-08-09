@@ -50,13 +50,22 @@ const validateForgotPassword = [
 ];
 
 const validateResetPassword = [
-  body("newPassword")
+  body("password")
     .notEmpty()
     .withMessage("Password is required")
     .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{6,}$/)
     .withMessage(
       "Password must be at least 6 characters, 1 symbol, and 1 uppercase"
     ),
+  body("confirmPassword")
+    .notEmpty()
+    .withMessage("Confirm password is required")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords must match");
+      }
+      return true;
+    }),
 ];
 
 const validateChangeUsername = [

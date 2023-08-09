@@ -26,7 +26,7 @@ function App() {
       <Route path="/admin/landing" element={<AdminLanding />} />
       <Route path="/cashier/landing" element={<CashierLanding />} />
       <Route path="/admin/landing/product-management" element={<ProductManagement />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/verification/:token" element={<ResetPassword />} />
     </Routes>
     </>
   );

@@ -58,9 +58,6 @@ const authControllers = {
       if (!checkLogin) {
         return res.status(404).json({ message: "User not found" });
       }
-      // if (!checkLogin.isActive)
-      //   return res.status(404).json({ message: "Your Account is not Active" });
-      // // console.log("check log:",checkLogin)
 
       const passwordValid = await bcrypt.compare(password, checkLogin.password);
       console.log("pass:",passwordValid)
@@ -70,12 +67,13 @@ const authControllers = {
       let payload = {
         id: checkLogin.id,
         username: checkLogin.username,
-        role: checkLogin.role
+        role: checkLogin.role,
+        isActive: checkLogin.isActive
       };
 
       const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "24h" });
 
-      return res.status(200).json({ message: "Login success", token: token, role: checkLogin.role });
+      return res.status(200).json({ message: "Login success", token: token, role: checkLogin.role, isActive: checkLogin.isActive });
     } catch (error) {
       return res.status(500).json({ message: "Login failed", error: error.message });
     }
@@ -94,17 +92,17 @@ const authControllers = {
         email: checkEmail.email,
       };
       const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "2h" });
-      // const redirect = `http://localhost:3000/verification/${token}`;
+      const redirect = `http://localhost:3000/verification/${token}`;
 
-      // const data = await fs.readFile(path.resolve(__dirname, "../email/forgotPassword.html"), "utf-8");
-      // const tempCompile = handlebars.compile(data);
-      // const tempResult = tempCompile({ redirect });
-      // await transporter.sendMail({
-      //   from: process.env.user_gmail,
-      //   to: email,
-      //   subject: "Forgot Password",
-      //   html: tempResult,
-      // });
+      const data = await fs.readFile(path.resolve(__dirname, "../email/forgotPassword.html"), "utf-8");
+      const tempCompile = handlebars.compile(data);
+      const tempResult = tempCompile({ redirect });
+      await transporter.sendMail({
+        from: process.env.user_gmail,
+        to: email,
+        subject: "Forgot Password",
+        html: tempResult,
+      });
       return res.status(200).json({ message: "Request accepted. Check your email to reset your password", token: token });
     } catch (error) {
       return res.status(500).json({ message: "Failed to send request" });
@@ -114,11 +112,11 @@ const authControllers = {
   resetPassword: async (req, res) => {
     try {
       const { id, email } = req.user;
-      const { newPassword } = req.body;
+      const { password, confirmPassword } = req.body;
       const user = await users.findOne({ where: { id } });
       if (!user) return res.status(400).json({ message: "Account not found" });
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
       await db.sequelize.transaction(async (t) => {
         const result = await users.update(

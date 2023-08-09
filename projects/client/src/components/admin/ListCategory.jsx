@@ -68,7 +68,7 @@ const ListCategory = () => {
 
   return (
     <div>
-        <Text align={"center"}>Category List</Text>
+        <Text align={"center"} fontSize={"2xl"} fontWeight={"bold"} mb={4}>Category List</Text>
       <Table variant="simple">
         <Thead>
           <Tr>

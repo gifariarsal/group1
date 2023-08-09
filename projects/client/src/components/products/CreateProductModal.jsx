@@ -27,7 +27,8 @@ const CreateProductModal = ({ isOpen, onClose, onCreateSuccess }) => {
     harga_produk: "",
     quantity: "",
     description: "",
-    productImg: null, // Store the uploaded image file
+    productImg: null,
+    categories: [],
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -66,13 +67,12 @@ const CreateProductModal = ({ isOpen, onClose, onCreateSuccess }) => {
       );
 
       if (createdProduct.status === 200) {
-        // Product created successfully
-        // You can do any additional actions or update the product list
+        
         if (typeof onCreateSuccess === "function") {
           onCreateSuccess(createdProduct.data.data);
         }
-        setFormData(initialFormData); // Reset the form data
-        onClose(); // Close the modal
+        setFormData(initialFormData); 
+        onClose(); 
         toast({
           title: "Product Created",
           description: "The product has been created successfully.",
@@ -81,7 +81,7 @@ const CreateProductModal = ({ isOpen, onClose, onCreateSuccess }) => {
           isClosable: true,
         });
       } else {
-        // Handle error if necessary
+
         toast({
           title: "Product Failed to Create",
           description: "The product could not be created.",

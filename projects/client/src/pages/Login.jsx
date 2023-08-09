@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Image,
   Input,
   InputGroup,
   InputRightElement,
@@ -22,6 +24,7 @@ import { loginSuccess } from "../redux/reducer/AuthReducer";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import ForgotPasswordModal from "../components/ForgotPasswordModal";
 import MainButton from "../components/buttons/MainButton";
+import Logo from "../assets/cashien_logo.png";
 
 const Login = () => {
   const [show, setShow] = React.useState(false);
@@ -45,14 +48,21 @@ const Login = () => {
       });
       console.log(res);
       if (res.status === 200) {
-        dispatch(loginSuccess(res.data.token));
-        if (res.data.role === "Cashier") {
-          navigate("/cashier/landing");
-        } else if (res.data.role === "Admin") {
-          navigate("/admin/landing");
+        const userData = res.data;
+        if (userData.isActive === true) {
+          dispatch(loginSuccess(res.data.token));
+          if (res.data.role === "Cashier") {
+            navigate("/cashier/landing");
+          } else if (res.data.role === "Admin") {
+            navigate("/admin/landing");
+          }
+          alert("Login Success");
+        } else {
+          alert("Account is not active, please contact admin");
         }
       }
     } catch (err) {
+      alert("Login Failed, Error: " + err);
       console.log(err);
     }
   };
@@ -79,15 +89,22 @@ const Login = () => {
       justifyContent={"center"}
       alignItems={"center"}
       h={"100vh"}
+      style={{
+        background:
+          "radial-gradient(circle, rgba(86,97,119,1) 0%, rgba(44,62,80,1) 100%)",
+      }}
     >
       <Box
         boxShadow={"lg"}
         rounded={"2xl"}
-        h={"400px"}
+        bg={"white"}
         w={{ base: "80vw", md: "60vw", lg: "40vw" }}
       >
         <VStack spacing={"4"} px={8} py={12}>
           <Box w={"full"}>
+            <Center>
+              <Image src={Logo} w={"40%"} />
+            </Center>
             <Text
               w={"100%"}
               fontSize={"xx-large"}

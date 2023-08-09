@@ -31,15 +31,12 @@ const CashierLanding = () => {
   return (
     <Box>
       <Navbar />
-      <Box w={"100%"} bg={"red.100"} >
-        <Flex >
-          <Box mt={"60px"}>
-            <CashierSidebar />
-          </Box>
-          <Box mt={"60px"} w={"65%"}>
+      <Box w={"100%"} p={10} >
+        <Flex flexDir={{ base: "column-reverse", lg: "row" }} >
+          <Box mt={"60px"} w={{ base: "100%", lg:"70%"}}  rounded={"2xl"} p={5}>
             <ListProduct />
           </Box>
-          <Box bg={"whiteAlpha.500"} mt={"60px"}>
+          <Box bg={"#2C3E50"} mt={"60px"} w={{ base: "100%", lg:"30%"}} rounded={"2xl"} p={5}>
             <Cart/>
           </Box>
         </Flex>

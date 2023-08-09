@@ -13,5 +13,5 @@ module.exports = {
   cashierRouter,
   categoriesRouter,
   cartRouter,
-  reportRouter
+  reportRouter,
 };

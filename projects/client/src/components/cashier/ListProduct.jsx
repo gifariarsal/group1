@@ -13,11 +13,14 @@ import {
   Flex,
   Button,
   useDisclosure,
+  Input,
+  useToast,
 } from "@chakra-ui/react";
 
 import SortAlphabetical from "../products/SortAlphabetical";
 import SortPrice from "../products/SortPrice";
 import AddToCartButton from "./AddToCartButton";
+
 
 const API_URL = "http://localhost:8000/api/product";
 const CATEGORY_URL = "http://localhost:8000/api/category";
@@ -36,6 +39,8 @@ const ListProduct = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+const toast = useToast();
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -52,6 +57,7 @@ const ListProduct = () => {
       let queryParams = {
         size: PRODUCTS_PER_PAGE,
         page: currentPage || 2,
+        isActive: true,
       };
       if (filterCategory && filterCategory !== "All") {
         queryParams.categoryId = filterCategory;
@@ -66,17 +72,14 @@ const ListProduct = () => {
         queryParams.sort_Harga = sortPrice;
       }
 
+
       const response = await axios.get(API_URL, {
         params: queryParams,
       });
-
-      const updatedProducts = response.data.data.map((product) => ({
-        ...product,
-        harga_produk: product.price, // Assuming that the API returns the price for each product as "price"
-        quantity: 1, // Assuming that the initial quantity is 1, you can set it based on your requirements.
-      }));
-      setProducts(updatedProducts);
-      setProducts(response.data.data);
+      
+      const activeProducts = response.data.data.filter((product) => product.isActive);
+      setProducts(activeProducts);
+      // setProducts(response.data.data);
 
       // Update the totalPages based on the response headers
       const totalPagesFromHeaders = Number(response.headers["total-pages"]);
@@ -84,8 +87,14 @@ const ListProduct = () => {
 
       setLoading(false);
     } catch (error) {
-      console.error(error);
-      setError("Failed to fetch products.");
+      
+      toast({
+        title: "Products Not Found",
+        status: "error",
+        isClosable: true,
+        position: "top",
+        duration: 1000,
+      })
       setLoading(false);
     }
   };
@@ -146,20 +155,20 @@ const ListProduct = () => {
   };
 
   const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1));
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
   
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, 2));
+  };
+
   const handleAddToCart = (productId) => {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Please login first");
       return;
     }
-  
+
     axios
       .post(
         "http://localhost:8000/api/cart",
@@ -212,7 +221,7 @@ const ListProduct = () => {
 
   return (
     <Box maxW="800px" mx="auto" mt="20px" p="20px">
-      <Text fontSize="xl" fontWeight="bold" textAlign="center" mb="20px">
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb="20px">
         Product List
       </Text>
       <Flex>
@@ -257,33 +266,30 @@ const ListProduct = () => {
           <Text mt="2" fontWeight="bold">
             Filter by Product Name:
           </Text>
-          <input
-            type="text"
-            value={filterProductName}
-            onChange={(e) => setFilterProductName(e.target.value)}
-            placeholder="Enter product name..."
-            style={{
-              border: "1px solid #CBD5E0",
-              borderRadius: "4px",
-              padding: "5px 10px",
-              width: "80%",
-            }}
-          />
-          <Button
-            colorScheme="teal"
-            onClick={handleFilter}
-            ml={2}
-            size="sm"
-            mt={1}
-          >
-            Filter
-          </Button>
+          <Flex>
+            <Input
+              type="text"
+              rounded={"lg"}
+              value={filterProductName}
+              onChange={(e) => setFilterProductName(e.target.value)}
+              placeholder="Enter product name..."
+            />
+            <Button
+              colorScheme="orange"
+              onClick={handleFilter}
+              ml={2}
+              size="sm"
+              mt={1}
+            >
+              Filter
+            </Button>
+          </Flex>
         </Box>
       </Flex>
 
-      <Flex mt="4" justify="center">
+      <Flex mt="10" justify="center">
         <Button
-          colorScheme="teal"
+          colorScheme="orange"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           mr="2"
@@ -294,7 +300,7 @@ const ListProduct = () => {
         {pageNumbers.map((page) => (
           <Button
             key={page}
-            colorScheme="teal"
+            colorScheme="orange"
             onClick={() => setCurrentPage(page)}
             disabled={currentPage === page}
             mr="2"
@@ -304,7 +310,7 @@ const ListProduct = () => {
           </Button>
         ))}
         <Button
-          colorScheme="teal"
+          colorScheme="orange"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           ml="2"
@@ -319,11 +325,11 @@ const ListProduct = () => {
         {products.map((product) => (
           <GridItem key={product.id}>
             <Box
-              borderWidth="1px"
-              borderRadius="lg"
+              borderWidth="2px"
+              borderRadius="xl"
               p="10px"
               bg="white"
-              boxShadow="md"
+              boxShadow="lg"
               transition="transform 0.2s"
               _hover={{ transform: "translateY(-7px)", color: "teal" }}
             >
