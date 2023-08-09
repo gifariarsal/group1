@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import CashierSidebar from "../../components/cashier/CashierSidebar";
 import ListProduct from "../../components/cashier/ListProduct";
 import Cart from "../../components/cashier/Cart";
-import Cart from "../../components/cashier/Cart";
 
 function withAuth(Component) {
   return function WrappedComponent(props) {
@@ -25,9 +24,6 @@ function withAuth(Component) {
     return <Component {...props} />;
   };
 }
-
-
-
 
 
 

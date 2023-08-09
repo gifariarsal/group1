@@ -20,7 +20,6 @@ import {
 import SortAlphabetical from "../products/SortAlphabetical";
 import SortPrice from "../products/SortPrice";
 import AddToCartButton from "./AddToCartButton";
-import AddToCartButton from "./AddToCartButton";
 
 
 const API_URL = "http://localhost:8000/api/product";
