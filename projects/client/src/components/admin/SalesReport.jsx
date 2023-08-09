@@ -1,21 +1,4 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Container,
-  Input,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  VStack,
-  Text,
-  Heading,
-  Box,
-} from "@chakra-ui/react";
-import ProductsSold from "./ProductsSold";
-import SalesChart from "./SalesChart";
+import React from 'react'
 
 const SalesReport = () => {
   const [startDate, setStartDate] = useState("");
