@@ -21,9 +21,7 @@ const productControllers = {
         return res.status(404).json({ message: "Product not found" });
       res.status(200).json({ message: "Product found", data: products });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to get product", error: error.message });
+      res.status(500).json({ message: "Failed to get product", error: error.message });
     }
   },
 
@@ -57,9 +55,7 @@ const productControllers = {
         });
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to create product", error: error.message });
+      res.status(500).json({ message: "Failed to create product", error: error.message });
     }
   },
 
@@ -157,9 +153,7 @@ const productControllers = {
         data: updatedProduct,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to update product", error: error.message });
+      res.status(500).json({ message: "Failed to update product", error: error.message });
     }
   },
 
@@ -176,9 +170,7 @@ const productControllers = {
 
       res.status(200).json({ message: "Product deactivated successfully" });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to deactivate product", error: error.message });
+      res.status(500).json({ message: "Failed to deactivate product", error: error.message });
     }
   },
 
@@ -195,9 +187,7 @@ const productControllers = {
 
       res.status(200).json({ message: "Product activated successfully" });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to activate product", error: error.message });
+      res.status(500).json({ message: "Failed to activate product", error: error.message });
     }
   },
 };

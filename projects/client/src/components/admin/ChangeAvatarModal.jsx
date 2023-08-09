@@ -17,10 +17,33 @@ import React, { useState } from "react";
 
 const ChangeAvatarModal = ({ isOpen, onClose }) => {
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [error, setError] = useState("");
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
+
+    if (!file) {
+      setProfilePhoto(null);
+      setError("No profile photo selected.");
+      return;
+    }
+
+    if (file.size > 1024 * 1024) {
+      setProfilePhoto(null);
+      setError("Please select an image file with a maximum size of 1 MB.");
+      return;
+    }
+
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf("."));
+    if (!allowedExtensions.includes(fileExtension)) {
+      setProfilePhoto(null);
+      setError("Please select an image file with a valid extension (jpg, jpeg, png, gif).");
+      return;
+    }
+
     setProfilePhoto(file);
+    setError("");
   };
 
   const handleSave = async () => {
@@ -39,7 +62,7 @@ const ChangeAvatarModal = ({ isOpen, onClose }) => {
         },
       });
       // onSave(profilePhoto)
-      alert("Successfully updated profile photo!")
+      alert("Successfully updated profile photo!");
       window.location.reload();
       onClose();
     } catch (error) {
@@ -61,7 +84,8 @@ const ChangeAvatarModal = ({ isOpen, onClose }) => {
         <ModalBody>
           <FormControl>
             <FormLabel>Upload Photo</FormLabel>
-            <Input type="file" accept="image/*" onChange={handleImageUpload} />
+            <Input type="file" accept=".jpg, .jpeg, .png, .gif" onChange={handleImageUpload} />
+            {error && <Text color="red">{error}</Text>}
           </FormControl>
         </ModalBody>
         <ModalFooter>

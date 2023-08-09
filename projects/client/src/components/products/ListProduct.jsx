@@ -13,6 +13,8 @@ import {
   Flex,
   Button,
   useDisclosure,
+  Input,
+  useToast,
 } from "@chakra-ui/react";
 
 import UpdateProductModal from "./UpdateProductModal";
@@ -36,6 +38,8 @@ const ListProduct = () => {
   const [filterProductName, setFilterProductName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+const toast = useToast();
 
   useEffect(() => {
     fetchProducts();
@@ -73,8 +77,14 @@ const ListProduct = () => {
   
       setLoading(false);
     } catch (error) {
-      console.error(error);
-      setError("Failed to fetch products.");
+      
+      toast({
+        title: "Products Not Found",
+        status: "error",
+        isClosable: true,
+        position: "top",
+        duration: 1000,
+      })
       setLoading(false);
     }
   };
@@ -194,11 +204,11 @@ const ListProduct = () => {
   };
 
   const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, ));
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
+  
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, ));
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, 2));
   };
 
   if (loading) {
@@ -232,62 +242,91 @@ const ListProduct = () => {
 
   return (
     <Box maxW="800px" mx="auto" mt="20px">
-      <Text fontSize="xl" fontWeight="bold" textAlign="center" mb="20px">
-        Product List
-      </Text>
-      <Button colorScheme="blue" mb="10px" onClick={onCreateModalOpen}>
+      <Button colorScheme="orange" mb="4" onClick={onCreateModalOpen}>
         Create New Product
       </Button>
 
-      {/* Sort by Alphabetical */}
-      <Text mt="2" fontWeight="bold">
-        Sort by Alphabetical:
+      <Flex>
+        <Box w="50%">
+          {/* Sort by Alphabetical */}
+          <Text mt="2" fontWeight="bold">
+            Sort by Alphabetical:
+          </Text>
+          <SortAlphabetical
+            sortType={sortAlphabetical}
+            onSort={handleSortAlphabetical}
+          />
+        </Box>
+        <Box w="50%" ml={5}>
+          {/* Sort by Price */}
+          <Text mt="2" fontWeight="bold">
+            Sort by Price:
+          </Text>
+          <SortPrice sortType={sortPrice} onSort={handleSortPrice} />
+        </Box>
+      </Flex>
+      <Flex mt={5}>
+        <Box w="50%">
+          {/* Filter by Category */}
+          <Text mt="2" fontWeight="bold">
+            Filter by Category:
+          </Text>
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+          >
+            <option value="All">All Categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </Box>
+        <Box w="50%" ml={5}>
+          {/* Filter by Product Name */}
+          <Text mt="2" fontWeight="bold">
+            Filter by Product Name:
+          </Text>
+          {/* <input
+            type="text"
+            value={filterProductName}
+            onChange={(e) => setFilterProductName(e.target.value)}
+            placeholder="Enter product name..."
+            style={{
+              border: "1px solid #CBD5E0",
+              borderRadius: "4px",
+              padding: "5px 10px",
+              width: "80%",
+            }}
+          /> */}
+          <Flex>
+            <Input
+              type="text"
+              rounded={"lg"}
+              value={filterProductName}
+              onChange={(e) => setFilterProductName(e.target.value)}
+              placeholder="Enter product name..."
+            />
+            <Button
+              colorScheme="orange"
+              onClick={handleFilter}
+              ml={2}
+              size="sm"
+              mt={1}
+            >
+              Filter
+            </Button>
+          </Flex>
+        </Box>
+      </Flex>
+
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center" mt="10">
+        Product List
       </Text>
-      <SortAlphabetical
-        sortType={sortAlphabetical}
-        onSort={handleSortAlphabetical}
-      />
-
-      {/* Sort by Price */}
-      <Text mt="2" fontWeight="bold">
-        Sort by Price:
-      </Text>
-      <SortPrice sortType={sortPrice} onSort={handleSortPrice} />
-
-      {/* Filter by Category */}
-      <Text mt="2" fontWeight="bold">
-        Filter by Category:
-      </Text>
-      <select
-        value={filterCategory}
-        onChange={(e) => setFilterCategory(e.target.value)}
-      >
-        <option value="All">All Categories</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
-
-      {/* Filter by Product Name */}
-      <Text mt="2" fontWeight="bold">
-        Filter by Product Name:
-      </Text>
-      <input
-        type="text"
-        value={filterProductName}
-        onChange={(e) => setFilterProductName(e.target.value)}
-        placeholder="Enter product name..."
-      />
-
-      <Button colorScheme="teal" onClick={handleFilter}>
-        Filter
-      </Button>
-
-      <Flex mt="4" justify="center">
+      <Flex my="4" justify="center">
         <Button
-          colorScheme="teal"
+          colorScheme="orange"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           mr="2"
@@ -297,7 +336,7 @@ const ListProduct = () => {
         {pageNumbers.map((page) => (
           <Button
             key={page}
-            colorScheme="teal"
+            colorScheme="orange"
             onClick={() => setCurrentPage(page)}
             disabled={currentPage === page}
             mr="2"
@@ -306,7 +345,7 @@ const ListProduct = () => {
           </Button>
         ))}
         <Button
-          colorScheme="teal"
+          colorScheme="orange"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           ml="2"

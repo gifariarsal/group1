@@ -38,7 +38,7 @@ const ProductManagement = () => {
       >
         <Box>
           <Text fontSize={{ base: "xl", lg: "2xl" }} fontWeight={"medium"}>
-            Cashier Management
+            Product Management
           </Text>
         </Box>
       </Box>

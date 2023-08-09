@@ -87,7 +87,7 @@ const Navbar = () => {
               cursor={"pointer"}
               minW={0}
             >
-              <Avatar size={"sm"} name="User" src={getImageUrl(avatar)} />
+              <Avatar size={"sm"} name="User" border="1px solid #F9CDA6" src={getImageUrl(avatar)} />
             </MenuButton>
             <MenuList>
               <Link as={"button"} onClick={onOpenAvatar}>
